@@ -10,8 +10,17 @@ import useVisibleNav from './useVisibleNav';
 // Each menu section gets its own accent (the colours follow the active colour theme).
 const SECTION_STYLE = {
   Overview: { tone: 'rose', key: 'section.overview' },
-  Platform: { tone: 'violet', key: 'section.platform' },
-  'My organisation': { tone: 'emerald', key: 'section.organisation' },
+  Organisations: { tone: 'violet', key: 'section.organisations' },
+  'Revenue and billing': { tone: 'emerald', key: 'section.revenue' },
+  'Research and insights': { tone: 'sky', key: 'section.researchInsights' },
+  'Platform settings': { tone: 'amber', key: 'section.platformSettings' },
+  'Leads and sales': { tone: 'orange', key: 'section.leadsSales' },
+  Admissions: { tone: 'violet', key: 'section.admissions' },
+  Counselling: { tone: 'indigo', key: 'section.counselling' },
+  Finance: { tone: 'emerald', key: 'section.finance' },
+  'Marketing and channels': { tone: 'rose', key: 'section.marketing' },
+  Developers: { tone: 'sky', key: 'section.developers' },
+  'My organisation': { tone: 'teal', key: 'section.organisation' },
   Account: { tone: 'teal', key: 'section.account' },
 };
 

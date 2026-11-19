@@ -14,6 +14,12 @@ Stack (same as the ecommerce admin): Vite 7, React 19, Tailwind CSS 4, react-rou
 - **One colour rule** (`docs/THEMING.md`, enforced by `npm run check:theme`): never hard-code a light-only colour; use `bg-surface`, `text-fg`, `border-line` and give coloured chips a `dark:` partner.
 - Design-system files copied from `central-ecommerce-admin` live in `src/app/index.css` and `src/shared/ui/` (Card, Button, Badge, PageHeader, ThemePicker...). `src/shared/ui/ui.jsx` is the small kit pages import; it is built on them.
 
+## Sign-in page image
+The sign-in page is split-screen: brand panel on the left (hidden on phones), form on the right. Put your photo at `public/login-hero.jpg` (about 1600x1200, landscape, not too busy: white text sits on a dark overlay), or set `VITE_LOGIN_IMAGE` in `.env` to another path or URL. If the file is missing the panel falls back to the brand gradient with a dot pattern.
+
+## Menu sections
+Platform staff see: Overview, Organisations, Revenue and billing, Research and insights, Platform settings, Account. Organisation users see: Overview, Leads and sales, Admissions, Counselling, Finance, Marketing and channels, Developers, My organisation, Account. Set `section`, `order` and `scope` in each module's `nav`; the section order lives in `src/app/navigation.js`.
+
 ## Run
 ```bash
 cp .env.example .env     # VITE_API_BASE_URL=http://localhost:4100/api/v1

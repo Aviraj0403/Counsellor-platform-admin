@@ -12,7 +12,7 @@ export default {
     { path: '/colleges/:id', element: <Guard scope="tenant" perm="colleges:read" module="colleges"><CollegeDetail /></Guard> },
   ],
   nav: [
-    { section: 'My organisation', order: 14, to: '/colleges', label: 'Colleges', icon: Building2, scope: 'tenant', perm: 'colleges:read', module: 'colleges' },
-    { section: 'My organisation', order: 15, to: '/colleges/shortlist', label: 'Shortlist tool', icon: Building2, scope: 'tenant', perm: 'colleges:read', module: 'colleges' },
+    { section: 'Admissions', order: 14, to: '/colleges', label: 'Colleges', icon: Building2, scope: 'tenant', perm: 'colleges:read', module: 'colleges' },
+    { section: 'Admissions', order: 15, to: '/colleges/shortlist', label: 'Shortlist tool', icon: Building2, scope: 'tenant', perm: 'colleges:read', module: 'colleges' },
   ],
 };

@@ -1,0 +1,6 @@
+{
+  "description": "bots module",
+  "dependsOn": [
+    "auth"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "description": "appointments module",
+  "dependsOn": [
+    "auth"
+  ]
+}

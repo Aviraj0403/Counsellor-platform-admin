@@ -10,7 +10,7 @@ export default {
     { path: '/audit', element: <Guard scope="tenant" perm="audit:read"><Audit /></Guard> },
   ],
   nav: [
-    { section: 'Platform', order: 60, to: '/platform-audit', label: 'Platform audit', labelKey: 'nav.platformAudit', icon: History, scope: 'platform', perm: 'platform:audit:read' },
-    { section: 'My organisation', order: 40, to: '/audit', label: 'Activity log', labelKey: 'nav.activity', icon: History, scope: 'tenant', perm: 'audit:read' },
+    { section: 'Platform settings', order: 60, to: '/platform-audit', label: 'Platform audit', labelKey: 'nav.platformAudit', icon: History, scope: 'platform', perm: 'platform:audit:read' },
+    { section: 'My organisation', order: 50, to: '/audit', label: 'Activity log', labelKey: 'nav.activity', icon: History, scope: 'tenant', perm: 'audit:read' },
   ],
 };

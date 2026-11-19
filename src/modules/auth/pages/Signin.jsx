@@ -1,4 +1,4 @@
-import { Sparkles } from 'lucide-react';
+import { BarChart3, CalendarCheck, ShieldCheck, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useI18n } from '../../../shared/i18n/languageContext.js';
@@ -8,6 +8,55 @@ import Ambient from '../../../shared/ui/Ambient.jsx';
 import ThemePicker from '../../../shared/ui/ThemePicker.jsx';
 import { Button, Field, Input } from '../../../shared/ui/ui';
 import useAuth from '../hooks/useAuth';
+
+// Drop your own photo at public/login-hero.jpg, or point VITE_LOGIN_IMAGE at any image URL. If it is missing the gradient panel shows instead.
+const HERO = import.meta.env.VITE_LOGIN_IMAGE || '/login-hero.jpg';
+const POINTS = [
+  { icon: CalendarCheck, key: 'auth.point1', text: 'Leads, follow-ups and counselling appointments in one place' },
+  { icon: BarChart3, key: 'auth.point2', text: 'Track every student from first enquiry to admission' },
+  { icon: ShieldCheck, key: 'auth.point3', text: 'Secure, role-based access for your whole team' },
+];
+
+function HeroPanel() {
+  const { t } = useI18n();
+  const [imgOk, setImgOk] = useState(true);
+  return (
+    <aside className="brand-gradient relative hidden w-[52%] max-w-[760px] shrink-0 overflow-hidden lg:flex" aria-label={t('auth.heroLabel', 'About the platform')}>
+      {imgOk && <img src={HERO} alt="" className="absolute inset-0 h-full w-full object-cover" onError={() => setImgOk(false)} />}
+      {/* pattern + legibility overlay: the text below is always white on a dark wash, in light and dark mode */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/20" />
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.35) 1px, transparent 0)', backgroundSize: '22px 22px' }}
+        aria-hidden="true"
+      />
+      <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-14">
+        <div className="flex items-center gap-3 text-white">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-inset ring-white/30 backdrop-blur">
+            <Sparkles size={20} />
+          </span>
+          <span className="text-lg font-semibold">{t('shell.brand', 'Counsellor Platform')}</span>
+        </div>
+        <div className="max-w-lg text-white">
+          <h2 className="text-4xl font-semibold leading-tight xl:text-5xl">{t('auth.headline', 'Turn every enquiry into an admission.')}</h2>
+          <ul className="mt-8 space-y-4">
+            {POINTS.map(({ icon, key, text }) => {
+              const Icon = icon;
+              return (
+              <li key={key} className="flex items-start gap-3 text-base text-white/90">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/15 ring-1 ring-inset ring-white/25">
+                  <Icon size={16} />
+                </span>
+                <span>{t(key, text)}</span>
+              </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </aside>
+  );
+}
 
 export default function Signin() {
   const { me, login, verifyMfa } = useAuth();
@@ -45,7 +94,9 @@ export default function Signin() {
   };
 
   return (
-    <div className="bg-mesh relative isolate flex min-h-dvh items-center justify-center p-4 text-fg">
+    <div className="flex min-h-dvh text-fg">
+      <HeroPanel />
+      <main className="bg-mesh relative isolate flex min-h-dvh flex-1 items-center justify-center p-4">
       <Ambient />
       {/* appearance and language are available before signing in, same as the ecommerce admin */}
       <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
@@ -95,6 +146,7 @@ export default function Signin() {
           {mfaToken ? 'Verify' : t('auth.signin', 'Sign in')}
         </Button>
       </form>
+      </main>
     </div>
   );
 }

@@ -9,5 +9,5 @@ export default {
     { path: '/applications', element: <Guard scope="tenant" perm="applications:read" module="applications"><Applications /></Guard> },
     { path: '/applications/:id', element: <Guard scope="tenant" perm="applications:read" module="applications"><ApplicationDetail /></Guard> },
   ],
-  nav: [{ section: 'My organisation', order: 16, to: '/applications', label: 'Applications', icon: FileText, scope: 'tenant', perm: 'applications:read', module: 'applications' }],
+  nav: [{ section: 'Admissions', order: 16, to: '/applications', label: 'Applications', icon: FileText, scope: 'tenant', perm: 'applications:read', module: 'applications' }],
 };

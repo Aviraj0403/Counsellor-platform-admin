@@ -11,5 +11,5 @@ export default {
     { path: '/students/new', element: <Guard scope="tenant" perm="students:write" module="students"><StudentNew /></Guard> },
     { path: '/students/:id', element: <Guard scope="tenant" perm="students:read" module="students"><StudentDetail /></Guard> },
   ],
-  nav: [{ section: 'My organisation', order: 12, to: '/students', label: 'Students', icon: GraduationCap, scope: 'tenant', perm: 'students:read', module: 'students' }],
+  nav: [{ section: 'Admissions', order: 12, to: '/students', label: 'Students', icon: GraduationCap, scope: 'tenant', perm: 'students:read', module: 'students' }],
 };

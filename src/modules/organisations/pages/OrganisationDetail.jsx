@@ -87,9 +87,14 @@ export default function OrganisationDetail() {
     }
   };
 
-  const grouped = Object.keys(GROUPS)
-    .map((g) => ({ key: g, label: GROUPS[g], items: catalog.modules.filter((m) => m.group === g) }))
+  const labelOf = (key) => catalog.modules.find((m) => m.key === key)?.label || key;
+  const groupKeys = [...Object.keys(GROUPS), ...new Set(catalog.modules.map((m) => m.group).filter((g) => !GROUPS[g]))];
+  const grouped = groupKeys
+    .map((g) => ({ key: g, label: GROUPS[g] || humanize(g), items: catalog.modules.filter((m) => m.group === g) }))
     .filter((g) => g.items.length);
+  const addOns = catalog.modules.filter((m) => !m.core);
+  const addOnsOn = addOns.filter((m) => tenant.modules[m.key]).length;
+  const monthlyInr = addOns.filter((m) => tenant.modules[m.key]).reduce((n, m) => n + (m.priceMonthlyInr || 0), 0);
 
   return (
     <>
@@ -97,7 +102,12 @@ export default function OrganisationDetail() {
         <Link to="/organisations" className="text-brand-600 dark:text-brand-300 hover:underline">← Organisations</Link>
       </p>
       <PageHeader
-        title={tenant.name}
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            {tenant.name}
+            {tenant.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}
+          </span>
+        }
         subtitle={`Address: ${tenant.slug} · ${tenant.staff.active} active staff${tenant.staff.blocked ? `, ${tenant.staff.blocked} blocked` : ''} · created ${formatDate(tenant.createdAt)}`}
         action={
           tenant.status === 'active' ? (
@@ -107,7 +117,11 @@ export default function OrganisationDetail() {
           )
         }
       />
-      {tenant.status !== 'active' && <p className="mb-4"><Badge tone="red">Suspended: nobody in this organisation can log in</Badge></p>}
+      {tenant.status !== 'active' && <p className="mb-4 text-sm text-fg-muted">Suspended: nobody in this organisation can log in until you reactivate it.</p>}
+
+      <Card title="Staff" className="mb-5">
+        <p className="text-sm text-fg-muted">{tenant.staff.active} active staff account{tenant.staff.active === 1 ? '' : 's'}{tenant.staff.blocked ? `, ${tenant.staff.blocked} blocked` : ''}. Their names and roles are managed by the organisation owner; platform staff do not browse them.</p>
+      </Card>
 
       <Card title="Name" className="mb-5">
         <div className="flex max-w-md gap-2">
@@ -116,14 +130,14 @@ export default function OrganisationDetail() {
         </div>
       </Card>
 
-      <Card title="Features (modules)" className="mb-5">
+      <Card title="Features (modules)" className="mb-5" action={<span className="text-caption">{addOnsOn} of {addOns.length} add-ons on{monthlyInr > 0 ? ` · list price ₹${monthlyInr}/month` : ''}</span>}>
         <p className="mb-4 text-xs text-fg-muted">
           Core features are always on. Add-ons are off until you switch them on here. A feature marked “coming soon” is not built yet: do not sell it yet.
         </p>
         <div className="space-y-5">
           {grouped.map((g) => (
             <div key={g.key}>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-fg-muted">{g.label}</p>
+              <p className="text-eyebrow mb-2">{g.label} <span className="text-caption">({g.items.filter((m) => tenant.modules[m.key]).length}/{g.items.length} on)</span></p>
               <div className="grid gap-3 md:grid-cols-2">
                 {g.items.map((m) => {
                   const on = !!tenant.modules[m.key];
@@ -136,7 +150,11 @@ export default function OrganisationDetail() {
                           {m.stage === 'soon' && <Badge tone="amber">Coming soon</Badge>}
                         </p>
                         <p className="mt-1 text-xs text-fg-muted">{m.whatItDoes}</p>
-                        {m.dependsOn?.length > 0 && <p className="mt-1 text-xs text-fg-muted">Needs: {m.dependsOn.join(', ')}</p>}
+                        {m.dependsOn?.length > 0 && (
+                          <p className="mt-1 text-xs text-fg-muted">
+                            Needs: {m.dependsOn.map((k) => `${labelOf(k)}${tenant.modules[k] ? '' : ' (off)'}`).join(', ')}
+                          </p>
+                        )}
                         {m.priceMonthlyInr > 0 && <p className="mt-1 text-xs text-fg-muted">₹{m.priceMonthlyInr}/month</p>}
                       </div>
                       <input

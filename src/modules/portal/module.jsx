@@ -18,7 +18,7 @@ export default {
   nav: [
     { section: 'My organisation', order: 40, to: '/portal/student-invites', label: 'Student portal invites', icon: UserPlus, scope: 'tenant', perm: 'students:write', module: 'studentPortal' },
     { section: 'My organisation', order: 41, to: '/portal/college-invites', label: 'College portal invites', icon: Building2, scope: 'tenant', perm: 'colleges:write', module: 'collegePortal' },
-    { section: 'My organisation', order: 1, to: '/my-applications', label: 'My application', icon: GraduationCap, scope: 'tenant', perm: 'portal:student', module: 'studentPortal' },
-    { section: 'My organisation', order: 2, to: '/college-applications', label: 'College applications', icon: ClipboardList, scope: 'tenant', perm: 'portal:college', module: 'collegePortal' },
+    { section: 'Overview', order: 1, to: '/my-applications', label: 'My application', icon: GraduationCap, scope: 'tenant', perm: 'portal:student', module: 'studentPortal' },
+    { section: 'Overview', order: 2, to: '/college-applications', label: 'College applications', icon: ClipboardList, scope: 'tenant', perm: 'portal:college', module: 'collegePortal' },
   ],
 };

@@ -20,10 +20,12 @@ import seoPages from '../modules/seoPages/module';
 import students from '../modules/students/module';
 import team from '../modules/team/module';
 import whatsapp from '../modules/whatsapp/module';
+import appointments from '../modules/appointments/module';
+import bots from '../modules/bots/module';
 
 /**
  * THE list of feature modules. Adding a feature = create src/modules/<name>/ (api.js, pages/, module.jsx, optional index.js)
  * and add ONE line here. Routes and the sidebar are built from this list; nothing else needs editing.
  * (The catalog module has no screens of its own, it only exposes a hook, so it is not listed.)
  */
-export const MODULES = [dashboard, organisations, billing, insights, audit, leads, followups, ledger, students, colleges, applications, documents, domains, commissions, reports, metaAds, portal, publicApi, seoPages, team, whatsapp, auth];
+export const MODULES = [dashboard, organisations, billing, insights, audit, leads, followups, ledger, students, colleges, applications, documents, domains, commissions, reports, metaAds, portal, publicApi, seoPages, team, whatsapp, appointments, bots, auth];
