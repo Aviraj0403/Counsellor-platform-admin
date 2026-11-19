@@ -36,6 +36,7 @@ const en = {
   'nav.invoices': 'Invoices',
   'nav.costs': 'Platform costs',
   'nav.research': 'Research',
+  'nav.central': 'Central data',
   'nav.platformAudit': 'Platform audit',
   'nav.leads': 'Leads',
   'nav.ledger': 'Ledger',

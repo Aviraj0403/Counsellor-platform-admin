@@ -34,6 +34,7 @@ const hi = {
   'nav.invoices': 'इनवॉइस',
   'nav.costs': 'प्लेटफ़ॉर्म का खर्च',
   'nav.research': 'रिसर्च',
+  'nav.central': 'सेंट्रल डेटा',
   'nav.platformAudit': 'प्लेटफ़ॉर्म ऑडिट',
   'nav.leads': 'लीड्स',
   'nav.ledger': 'खाता बही (लेजर)',

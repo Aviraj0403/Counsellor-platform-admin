@@ -1,0 +1,6 @@
+{
+  "description": "central module",
+  "dependsOn": [
+    "auth"
+  ]
+}
