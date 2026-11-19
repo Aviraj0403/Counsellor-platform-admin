@@ -4,6 +4,7 @@ import { Badge, Button, Card, Empty, Field, Input, PageHeader, Spinner, Table } 
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { formatDate } from '../../../shared/lib/format';
 import * as api from '../api';
+import MetaInsights from './MetaInsights';
 
 const STATUS_TONE = { sent: 'green', failed: 'red', skipped: 'amber' };
 
@@ -75,8 +76,9 @@ export default function MetaSettings() {
         subtitle="Bring Meta lead-ad enquiries in automatically, and tell Meta which leads became qualified or admitted (hashed, no raw phone or email is sent)."
         action={<Badge tone={cfg.enabled ? 'green' : 'gray'}>{cfg.enabled ? 'On' : 'Off'}</Badge>}
       />
+      <MetaInsights />
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card title="Connection">
+        <Card title="Pixel and conversions">
           <div className="space-y-3">
             <Field label="Pixel (dataset) ID"><Input value={form.pixelId} onChange={set('pixelId')} inputMode="numeric" /></Field>
             <Field label="Facebook Page ID (optional)"><Input value={form.pageId} onChange={set('pageId')} /></Field>

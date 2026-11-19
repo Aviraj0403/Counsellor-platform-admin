@@ -29,15 +29,9 @@ export const SECTION_ORDER = [
   'Account',
 ];
 
-// Placement fixes for entries whose module file is owned elsewhere. Prefer editing the module's own `nav` entry.
-const PLACEMENT = {
-  '/integrations/meta': { section: 'Marketing and channels', order: 20 },
-};
-
 export const NAV = SECTION_ORDER.map((section) => ({
   section,
   items: MODULES.flatMap((m) => m.nav ?? [])
-    .map((i) => ({ ...i, ...(PLACEMENT[i.to] || {}) }))
     .filter((i) => i.section === section)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
 })).filter((s) => s.items.length > 0);

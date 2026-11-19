@@ -1,61 +1,67 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link, useParams } from 'react-router-dom';
-import { Badge, Button, Card, Empty, Input, PageHeader, Spinner, Table } from '../../../shared/ui/ui';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import { Badge, Button, Empty } from '../../../shared/ui/ui';
 import { OrganisationBilling } from '../../billing';
 import { useAuth } from '../../auth';
-import { useCatalog } from '../../catalog';
-import { platformAudit } from '../../audit';
 import * as platformApi from '../api';
 import { toastError } from '../../../shared/lib/AxiosToastError';
-import { formatDate, humanize } from '../../../shared/lib/format';
+import { formatDate } from '../../../shared/lib/format';
+import ActivityTab from '../components/ActivityTab';
+import IntegrationsTab from '../components/IntegrationsTab';
+import ModulesTab from '../components/ModulesTab';
+import OverviewTab from '../components/OverviewTab';
+import TeamTab from '../components/TeamTab';
+import WorkspaceSkeleton from '../components/WorkspaceSkeleton';
+import { rememberOrganisation } from '../lib/recent';
+import { TABS, TAB_KEYS } from '../lib/workspaceMeta';
 
-const GROUPS = { crm: 'CRM', admissions: 'Admissions', finance: 'Finance', marketing: 'Marketing', channels: 'Channels', platform: 'Platform' };
-
+/**
+ * One organisation's workspace for platform staff: set-up and health of its modules and integrations, billing, staff counts and
+ * platform changes. Configuration and health ONLY: never the organisation's students, leads, applications, documents or ledgers.
+ * The tab is part of the address (/organisations/:id/:tab) so the switcher can stay on the same tab when you change organisation.
+ */
 export default function OrganisationDetail() {
-  const { id } = useParams();
+  const { id, tab } = useParams();
   const { can } = useAuth();
-  const catalog = useCatalog();
-  const [tenant, setTenant] = useState(null);
-  const [audit, setAudit] = useState(null);
-  const [name, setName] = useState('');
+  const [ws, setWs] = useState(null);
+  const [error, setError] = useState('');
   const [busyKey, setBusyKey] = useState('');
+  const [activityKey, setActivityKey] = useState(0);
+  const latest = useRef(id);
+  latest.current = id;
 
   const load = useCallback(async () => {
+    setError('');
     try {
-      const { data } = await platformApi.getTenant(id);
-      setTenant(data);
-      setName(data.name);
+      const { data } = await platformApi.getWorkspace(id);
+      if (latest.current === id) setWs(data);
     } catch (e) {
-      toastError(e);
+      if (latest.current !== id) return;
+      setError(e?.response?.status === 404 ? 'This organisation does not exist (it may have been removed).' : 'The organisation could not be loaded. Check your connection and try again.');
+      if (e?.response?.status !== 404) toastError(e);
     }
   }, [id]);
 
-  const loadAudit = useCallback(async () => {
-    if (!can('platform:audit:read')) return;
-    try {
-      const { data } = await platformAudit({ tenantId: id, limit: 15 });
-      setAudit(data.items);
-    } catch (e) {
-      toastError(e);
-    }
-  }, [id, can]);
-
   useEffect(() => {
+    setWs(null);
     load();
-    loadAudit();
-  }, [load, loadAudit]);
+    rememberOrganisation(id);
+  }, [id, load]);
 
-  if (!tenant || !catalog) return <Spinner />;
+  const visibleTabs = TABS.filter((t) => (t.key === 'billing' ? can('platform:billing:manage') : t.key === 'activity' ? can('platform:audit:read') : true));
+  if (!tab) return <Navigate to={`/organisations/${id}/overview`} replace />;
+  if (!TAB_KEYS.includes(tab) || !visibleTabs.some((t) => t.key === tab)) return <Navigate to={`/organisations/${id}/overview`} replace />;
+  const base = `/organisations/${id}`;
 
   const toggleModule = async (m, on) => {
     setBusyKey(m.key);
     try {
       const { data } = await platformApi.setTenantModules(id, { [m.key]: on });
-      setTenant((t) => ({ ...t, modules: data.modules }));
       data.warnings.forEach((w) => toast(w, { icon: '⚠️', duration: 8000 }));
       if (!data.warnings.length) toast.success(`${m.label} ${on ? 'switched on' : 'switched off'}.`);
-      loadAudit();
+      await load();
+      setActivityKey((k) => k + 1);
     } catch (e) {
       toastError(e);
     } finally {
@@ -64,135 +70,87 @@ export default function OrganisationDetail() {
   };
 
   const setStatus = async (status) => {
-    const msg = status === 'suspended' ? `Suspend ${tenant.name}? Everyone in it is locked out immediately.` : `Reactivate ${tenant.name}?`;
-    if (!window.confirm(msg)) return;
+    const name = ws.organisation.name;
+    if (!window.confirm(status === 'suspended' ? `Suspend ${name}? Everyone in it is locked out immediately.` : `Reactivate ${name}?`)) return;
     try {
       await platformApi.setTenantStatus(id, status);
       toast.success(status === 'suspended' ? 'Organisation suspended.' : 'Organisation reactivated.');
-      load();
-      loadAudit();
+      await load();
+      setActivityKey((k) => k + 1);
     } catch (e) {
       toastError(e);
     }
   };
 
-  const rename = async () => {
+  const rename = async (name) => {
     try {
-      await platformApi.renameTenant(id, name.trim());
+      await platformApi.renameTenant(id, name);
       toast.success('Name updated.');
-      load();
-      loadAudit();
+      await load();
+      setActivityKey((k) => k + 1);
     } catch (e) {
       toastError(e);
     }
   };
 
-  const labelOf = (key) => catalog.modules.find((m) => m.key === key)?.label || key;
-  const groupKeys = [...Object.keys(GROUPS), ...new Set(catalog.modules.map((m) => m.group).filter((g) => !GROUPS[g]))];
-  const grouped = groupKeys
-    .map((g) => ({ key: g, label: GROUPS[g] || humanize(g), items: catalog.modules.filter((m) => m.group === g) }))
-    .filter((g) => g.items.length);
-  const addOns = catalog.modules.filter((m) => !m.core);
-  const addOnsOn = addOns.filter((m) => tenant.modules[m.key]).length;
-  const monthlyInr = addOns.filter((m) => tenant.modules[m.key]).reduce((n, m) => n + (m.priceMonthlyInr || 0), 0);
+  if (error) {
+    return (
+      <>
+        <p className="mb-2 text-sm"><Link to="/organisations" className="text-brand-600 dark:text-brand-300 hover:underline">← Organisations</Link></p>
+        <Empty>{error}</Empty>
+        <div className="mt-3"><Button variant="secondary" onClick={load}>Try again</Button></div>
+      </>
+    );
+  }
+  if (!ws) return <WorkspaceSkeleton />;
 
+  const o = ws.organisation;
+  const suspended = o.status !== 'active';
   return (
     <>
-      <p className="mb-2 text-sm">
-        <Link to="/organisations" className="text-brand-600 dark:text-brand-300 hover:underline">← Organisations</Link>
-      </p>
-      <PageHeader
-        title={
-          <span className="flex flex-wrap items-center gap-3">
-            {tenant.name}
-            {tenant.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}
-          </span>
-        }
-        subtitle={`Address: ${tenant.slug} · ${tenant.staff.active} active staff${tenant.staff.blocked ? `, ${tenant.staff.blocked} blocked` : ''} · created ${formatDate(tenant.createdAt)}`}
-        action={
-          tenant.status === 'active' ? (
-            <Button variant="danger" onClick={() => setStatus('suspended')}>Suspend</Button>
-          ) : (
-            <Button onClick={() => setStatus('active')}>Reactivate</Button>
-          )
-        }
-      />
-      {tenant.status !== 'active' && <p className="mb-4 text-sm text-fg-muted">Suspended: nobody in this organisation can log in until you reactivate it.</p>}
+      <p className="mb-2 text-sm"><Link to="/organisations" className="text-brand-600 dark:text-brand-300 hover:underline">← Organisations</Link></p>
 
-      <Card title="Staff" className="mb-5">
-        <p className="text-sm text-fg-muted">{tenant.staff.active} active staff account{tenant.staff.active === 1 ? '' : 's'}{tenant.staff.blocked ? `, ${tenant.staff.blocked} blocked` : ''}. Their names and roles are managed by the organisation owner; platform staff do not browse them.</p>
-      </Card>
-
-      <Card title="Name" className="mb-5">
-        <div className="flex max-w-md gap-2">
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
-          <Button variant="secondary" disabled={name.trim() === tenant.name || name.trim().length < 2} onClick={rename}>Save</Button>
+      <header className="surface-card mb-4 flex flex-wrap items-center justify-between gap-3 p-4" aria-label="Organisation">
+        <div className="min-w-0">
+          <p className="text-eyebrow">Organisation workspace</p>
+          <h1 className="flex flex-wrap items-center gap-3 text-xl font-semibold text-fg">
+            <span className="truncate">{o.name}</span>
+            {suspended ? <Badge tone="red">Suspended</Badge> : <Badge tone="green">Active</Badge>}
+            {ws.health.needsAttention > 0 && <Badge tone="amber">{ws.health.needsAttention} need attention</Badge>}
+          </h1>
+          <p className="text-caption mt-1">
+            Address: <span className="font-mono">{o.slug}</span> · {ws.plan.name || 'no plan'} · created {formatDate(o.createdAt)}
+          </p>
         </div>
-      </Card>
+        <p className="text-caption max-w-xs">Set-up and health only. This organisation's students, leads and records are not visible here.</p>
+      </header>
 
-      <Card title="Features (modules)" className="mb-5" action={<span className="text-caption">{addOnsOn} of {addOns.length} add-ons on{monthlyInr > 0 ? ` · list price ₹${monthlyInr}/month` : ''}</span>}>
-        <p className="mb-4 text-xs text-fg-muted">
-          Core features are always on. Add-ons are off until you switch them on here. A feature marked “coming soon” is not built yet: do not sell it yet.
-        </p>
-        <div className="space-y-5">
-          {grouped.map((g) => (
-            <div key={g.key}>
-              <p className="text-eyebrow mb-2">{g.label} <span className="text-caption">({g.items.filter((m) => tenant.modules[m.key]).length}/{g.items.length} on)</span></p>
-              <div className="grid gap-3 md:grid-cols-2">
-                {g.items.map((m) => {
-                  const on = !!tenant.modules[m.key];
-                  return (
-                    <div key={m.key} className="flex items-start justify-between gap-3 rounded-lg border border-line p-3">
-                      <div className="min-w-0">
-                        <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-fg">
-                          {m.label}
-                          {m.core && <Badge tone="blue">Core</Badge>}
-                          {m.stage === 'soon' && <Badge tone="amber">Coming soon</Badge>}
-                        </p>
-                        <p className="mt-1 text-xs text-fg-muted">{m.whatItDoes}</p>
-                        {m.dependsOn?.length > 0 && (
-                          <p className="mt-1 text-xs text-fg-muted">
-                            Needs: {m.dependsOn.map((k) => `${labelOf(k)}${tenant.modules[k] ? '' : ' (off)'}`).join(', ')}
-                          </p>
-                        )}
-                        {m.priceMonthlyInr > 0 && <p className="mt-1 text-xs text-fg-muted">₹{m.priceMonthlyInr}/month</p>}
-                      </div>
-                      <input
-                        type="checkbox"
-                        className="mt-1 h-4 w-4 shrink-0 accent-indigo-600"
-                        checked={on}
-                        disabled={m.core || busyKey === m.key || !can('platform:modules:manage')}
-                        onChange={(e) => toggleModule(m, e.target.checked)}
-                        aria-label={`${m.label} on or off`}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
+      <nav role="tablist" aria-label="Organisation sections" className="mb-5 flex gap-1 overflow-x-auto border-b border-line">
+        {visibleTabs.map((t) => {
+          const active = t.key === tab;
+          return (
+            <Link
+              key={t.key}
+              to={`${base}/${t.key}`}
+              role="tab"
+              aria-selected={active}
+              className={`-mb-px whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${active ? 'border-brand-500 text-fg' : 'border-transparent text-fg-muted hover:text-fg'}`}
+            >
+              {t.label}
+              {t.key === 'modules' && ws.health.needsAttention > 0 ? <span className="ml-2 inline-block h-2 w-2 rounded-full bg-brand-500" aria-label={`${ws.health.needsAttention} need attention`} /> : null}
+            </Link>
+          );
+        })}
+      </nav>
 
-      {can('platform:billing:manage') && <OrganisationBilling tenantId={id} modulesOn={JSON.stringify(tenant.modules)} />}
-
-      {audit && (
-        <Card title="Recent changes">
-          {audit.length === 0 ? (
-            <Empty>Nothing recorded yet.</Empty>
-          ) : (
-            <Table head={['When', 'What', 'Ref']}>
-              {audit.map((a) => (
-                <tr key={a._id}>
-                  <td className="px-3 py-2 text-fg-muted">{formatDate(a.at)}</td>
-                  <td className="px-3 py-2 capitalize">{humanize(a.action)}</td>
-                  <td className="px-3 py-2 font-mono text-xs text-fg-muted">{a.requestId?.slice(0, 8)}</td>
-                </tr>
-              ))}
-            </Table>
-          )}
-        </Card>
-      )}
+      <div role="tabpanel" aria-label={tab}>
+        {tab === 'overview' && <OverviewTab ws={ws} base={base} canRename onRename={rename} onStatus={setStatus} key={o.name} />}
+        {tab === 'modules' && <ModulesTab ws={ws} canToggle={can('platform:modules:manage')} busyKey={busyKey} onToggle={toggleModule} />}
+        {tab === 'integrations' && <IntegrationsTab ws={ws} />}
+        {tab === 'billing' && can('platform:billing:manage') && <OrganisationBilling tenantId={id} modulesOn={JSON.stringify(ws.modules.filter((m) => m.enabled).map((m) => m.key))} />}
+        {tab === 'team' && <TeamTab ws={ws} />}
+        {tab === 'activity' && can('platform:audit:read') && <ActivityTab tenantId={id} refreshKey={activityKey} />}
+      </div>
     </>
   );
 }

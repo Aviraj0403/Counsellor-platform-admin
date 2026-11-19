@@ -9,7 +9,7 @@ export default {
   key: 'organisations',
   routes: [
     { path: '/organisations', element: <Guard scope="platform" perm={perm}><Organisations /></Guard> },
-    { path: '/organisations/:id', element: <Guard scope="platform" perm={perm}><OrganisationDetail /></Guard> },
+    { path: '/organisations/:id/:tab?', element: <Guard scope="platform" perm={perm}><OrganisationDetail /></Guard> },
   ],
   nav: [{ section: 'Organisations', order: 10, to: '/organisations', label: 'Organisations', labelKey: 'nav.organisations', icon: Building2, scope: 'platform', perm }],
 };
