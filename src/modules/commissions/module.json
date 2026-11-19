@@ -1,0 +1,6 @@
+{
+  "description": "commissions module",
+  "dependsOn": [
+    "auth"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "description": "applications module",
+  "dependsOn": [
+    "auth",
+    "documents"
+  ]
+}

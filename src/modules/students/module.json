@@ -1,0 +1,7 @@
+{
+  "description": "students module",
+  "dependsOn": [
+    "auth",
+    "documents"
+  ]
+}

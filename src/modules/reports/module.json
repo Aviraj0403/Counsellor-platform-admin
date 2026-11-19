@@ -1,0 +1,6 @@
+{
+  "description": "reports module",
+  "dependsOn": [
+    "auth"
+  ]
+}

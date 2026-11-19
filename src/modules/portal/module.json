@@ -1,0 +1,6 @@
+{
+  "description": "portal module: staff invites + the student and college portal screens",
+  "dependsOn": [
+    "auth"
+  ]
+}

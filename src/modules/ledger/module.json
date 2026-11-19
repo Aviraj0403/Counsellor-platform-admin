@@ -1,0 +1,6 @@
+{
+  "description": "ledger module",
+  "dependsOn": [
+    "auth"
+  ]
+}

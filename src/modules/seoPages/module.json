@@ -1,0 +1,6 @@
+{
+  "description": "seoPages module",
+  "dependsOn": [
+    "auth"
+  ]
+}

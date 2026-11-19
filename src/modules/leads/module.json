@@ -1,0 +1,8 @@
+{
+  "description": "leads module",
+  "dependsOn": [
+    "auth",
+    "followups",
+    "whatsapp"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "description": "organisations module",
+  "dependsOn": [
+    "audit",
+    "auth",
+    "billing",
+    "catalog"
+  ]
+}

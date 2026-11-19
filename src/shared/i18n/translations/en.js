@@ -1,0 +1,87 @@
+// English = source of truth for keys. Add a key here first, then mirror it in hi.js. Missing keys fall back to English, never blank.
+const en = {
+  // Shell
+  'shell.skip': 'Skip to content',
+  'shell.primary': 'Primary',
+  'shell.mainNav': 'Main navigation',
+  'shell.openMenu': 'Open navigation menu',
+  'shell.closeMenu': 'Close menu',
+  'shell.expand': 'Expand sidebar',
+  'nav.collapse': 'Collapse sidebar',
+  'shell.account': 'Account menu',
+  'shell.logout': 'Logout',
+  'nav.logout': 'Sign out',
+  'shell.brand': 'Counsellor Platform',
+  'shell.breadcrumb': 'Breadcrumb',
+  'shell.home': 'Home',
+  'shell.details': 'Details',
+
+  // Sections and menu
+  'section.overview': 'Overview',
+  'section.platform': 'Platform',
+  'section.organisation': 'My organisation',
+  'section.account': 'Account',
+  'nav.home': 'Home',
+  'nav.organisations': 'Organisations',
+  'nav.plans': 'Plans & pricing',
+  'nav.invoices': 'Invoices',
+  'nav.costs': 'Platform costs',
+  'nav.research': 'Research',
+  'nav.platformAudit': 'Platform audit',
+  'nav.leads': 'Leads',
+  'nav.ledger': 'Ledger',
+  'nav.team': 'Team & roles',
+  'nav.activity': 'Activity log',
+  'nav.account': 'My account',
+
+  // Header
+  'header.language': 'Language',
+  'header.search': 'Search pages…',
+  'header.switchOrganisation': 'Switch organisation',
+  'header.searchOrganisations': 'Search organisations…',
+  'header.allOrganisations': 'All organisations',
+  'header.activeOrganisations': 'Organisations',
+  'header.viewAll': 'View all organisations',
+  'common.noResults': 'No results',
+  'common.loading': 'Loading...',
+
+  // Appearance
+  'theme.title': 'Appearance',
+  'theme.colour': 'Colour theme',
+  'theme.mode': 'Mode',
+  'theme.density': 'Density',
+  'theme.light': 'Light',
+  'theme.dark': 'Dark',
+  'theme.system': 'System',
+  'theme.compact': 'Compact',
+  'theme.comfortable': 'Comfortable',
+  'theme.classic': 'Classic',
+  'theme.beauty': 'Beauty',
+  'theme.ocean': 'Ocean',
+  'theme.emerald': 'Emerald',
+  'theme.slate': 'Slate',
+
+  // Sign in
+  'auth.title': 'Counsellor Platform',
+  'auth.subtitle': 'Sign in to your admin account',
+  'auth.email': 'Email',
+  'auth.password': 'Password',
+  'auth.signin': 'Sign in',
+
+  // Page titles
+  'page.welcome': 'Welcome, {name}',
+  'page.organisations': 'Organisations',
+  'page.plans': 'Plans and pricing',
+  'page.invoices': 'Invoices',
+  'page.costs': 'Platform costs',
+  'page.research': 'Usage and conversion research',
+  'page.platformAudit': 'Platform audit',
+  'page.leads': 'Leads',
+  'page.ledger': 'Ledger',
+  'page.team': 'Team & roles',
+  'page.activity': 'Activity log',
+  'page.account': 'My account',
+  'page.notFound': 'Page not found',
+};
+
+export default en;

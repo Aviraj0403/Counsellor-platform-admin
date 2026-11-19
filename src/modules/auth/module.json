@@ -1,0 +1,6 @@
+{
+  "description": "auth module",
+  "dependsOn": [
+    "catalog"
+  ]
+}

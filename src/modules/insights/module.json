@@ -1,0 +1,6 @@
+{
+  "description": "insights module",
+  "dependsOn": [
+    "auth"
+  ]
+}

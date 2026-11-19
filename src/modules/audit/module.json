@@ -1,0 +1,6 @@
+{
+  "description": "audit module",
+  "dependsOn": [
+    "auth"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "description": "dashboard module",
+  "dependsOn": [
+    "auth",
+    "billing",
+    "catalog"
+  ]
+}

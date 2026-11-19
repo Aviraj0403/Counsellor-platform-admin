@@ -1,0 +1,6 @@
+{
+  "description": "documents module",
+  "dependsOn": [
+    "auth"
+  ]
+}

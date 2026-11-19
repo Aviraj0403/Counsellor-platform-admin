@@ -1,0 +1,7 @@
+{
+  "description": "team module",
+  "dependsOn": [
+    "auth",
+    "catalog"
+  ]
+}

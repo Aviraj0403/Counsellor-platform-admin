@@ -1,0 +1,4 @@
+{
+  "note": "Empty on purpose: no light-only colours are allowed anywhere. See scripts/check-theme.mjs and docs/THEMING.md.",
+  "files": {}
+}
