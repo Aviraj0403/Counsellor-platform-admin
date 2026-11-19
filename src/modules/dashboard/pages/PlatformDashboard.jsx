@@ -2,6 +2,7 @@ import { Building2, CheckCircle2, Coins, Layers, PauseCircle, PiggyBank, Plus, T
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../../shared/i18n/languageContext.js';
+import OrgAvatar from '../../../shared/ui/OrgAvatar.jsx';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { formatDate, formatINR, thisMonth } from '../../../shared/lib/format';
 import { Badge, Button, Card, Empty, PageHeader, Spinner, Table } from '../../../shared/ui/ui';
@@ -81,8 +82,13 @@ export default function PlatformDashboard() {
                   {orgs.tenants.slice(0, 8).map((x) => (
                     <tr key={x.id} className="hover:bg-surface-2">
                       <td className="px-3 py-2.5">
-                        <Link to={`/organisations/${x.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">{x.name}</Link>
-                        <p className="text-caption">{x.slug}</p>
+                        <div className="flex items-center gap-3">
+                          <OrgAvatar name={x.name} logoUrl={x.logoUrl} brandColor={x.brandColor} size="sm" />
+                          <div className="min-w-0">
+                            <Link to={`/organisations/${x.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">{x.name}</Link>
+                            <p className="text-caption">{x.slug}</p>
+                          </div>
+                        </div>
                       </td>
                       <td className="px-3 py-2.5">{x.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}</td>
                       <td className="px-3 py-2.5 text-fg-muted">{addOnsOn(x.modules).length}</td>

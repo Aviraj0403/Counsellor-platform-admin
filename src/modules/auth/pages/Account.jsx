@@ -10,7 +10,7 @@ import { useI18n } from '../../../shared/i18n/languageContext.js';
 
 export default function Account() {
   const { t } = useI18n();
-  const { me, logout, refresh } = useAuth();
+  const { me, staff, logout, refresh } = useAuth();
   const [form, setForm] = useState({ currentPassword: '', newPassword: '' });
   const [busy, setBusy] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Account() {
 
   return (
     <>
-      <PageHeader title={t('page.account', 'My account')} subtitle={`${me.user.name} · ${me.user.email} · ${me.user.roleLabel || me.user.role}`} />
+      <PageHeader title={t('page.account', 'My account')} subtitle={`${staff.name} · ${staff.email} · ${me.platformUser ? 'Platform staff' : me.user.roleLabel || me.user.role}`} />
       <div className="grid gap-5 md:grid-cols-2">
         <Card title="Change password">
           <form onSubmit={change} className="space-y-4">

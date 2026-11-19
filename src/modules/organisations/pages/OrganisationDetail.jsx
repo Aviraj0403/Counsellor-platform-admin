@@ -7,6 +7,7 @@ import { useAuth } from '../../auth';
 import * as platformApi from '../api';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { formatDate } from '../../../shared/lib/format';
+import OrgAvatar from '../../../shared/ui/OrgAvatar.jsx';
 import ActivityTab from '../components/ActivityTab';
 import IntegrationsTab from '../components/IntegrationsTab';
 import ModulesTab from '../components/ModulesTab';
@@ -82,6 +83,17 @@ export default function OrganisationDetail() {
     }
   };
 
+  const saveBranding = async (body) => {
+    try {
+      await platformApi.updateTenantBranding(id, body);
+      toast.success('Branding updated.');
+      await load();
+      setActivityKey((k) => k + 1);
+    } catch (e) {
+      toastError(e);
+    }
+  };
+
   const rename = async (name) => {
     try {
       await platformApi.renameTenant(id, name);
@@ -111,7 +123,8 @@ export default function OrganisationDetail() {
       <p className="mb-2 text-sm"><Link to="/organisations" className="text-brand-600 dark:text-brand-300 hover:underline">← Organisations</Link></p>
 
       <header className="surface-card mb-4 flex flex-wrap items-center justify-between gap-3 p-4" aria-label="Organisation">
-        <div className="min-w-0">
+        <OrgAvatar name={o.name} logoUrl={o.logoUrl} brandColor={o.brandColor} size="lg" />
+        <div className="min-w-0 flex-1">
           <p className="text-eyebrow">Organisation workspace</p>
           <h1 className="flex flex-wrap items-center gap-3 text-xl font-semibold text-fg">
             <span className="truncate">{o.name}</span>
@@ -144,7 +157,7 @@ export default function OrganisationDetail() {
       </nav>
 
       <div role="tabpanel" aria-label={tab}>
-        {tab === 'overview' && <OverviewTab ws={ws} base={base} canRename onRename={rename} onStatus={setStatus} key={o.name} />}
+        {tab === 'overview' && <OverviewTab ws={ws} base={base} canRename onRename={rename} onStatus={setStatus} onBranding={saveBranding} key={`${o.name}|${o.logoUrl || ''}|${o.brandColor || ''}`} />}
         {tab === 'modules' && <ModulesTab ws={ws} canToggle={can('platform:modules:manage')} busyKey={busyKey} onToggle={toggleModule} />}
         {tab === 'integrations' && <IntegrationsTab ws={ws} />}
         {tab === 'billing' && can('platform:billing:manage') && <OrganisationBilling tenantId={id} modulesOn={JSON.stringify(ws.modules.filter((m) => m.enabled).map((m) => m.key))} />}

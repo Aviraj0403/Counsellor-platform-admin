@@ -12,7 +12,7 @@ const iconBtn =
 
 /** Sticky top bar: menu / collapse, page search, then (right) organisation switch, language, appearance, profile. */
 export default function Header({ toggleMobile, mobileOpen, collapsed, toggleCollapsed }) {
-  const { me, can, logout } = useAuth();
+  const { me, staff, acting, canSwitchOrganisation, logout } = useAuth();
   const { t, lang, setLang, languages } = useI18n();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -25,7 +25,7 @@ export default function Header({ toggleMobile, mobileOpen, collapsed, toggleColl
     return () => document.removeEventListener('mousedown', onDown);
   }, []);
 
-  const name = me?.user?.name || '';
+  const name = staff?.name || '';
   const collapseLabel = collapsed ? t('shell.expand', 'Expand sidebar') : t('nav.collapse', 'Collapse sidebar');
 
   return (
@@ -42,7 +42,7 @@ export default function Header({ toggleMobile, mobileOpen, collapsed, toggleColl
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-          {me?.scope === 'platform' && can('platform:tenants:manage') && <OrganisationSwitcher />}
+          {canSwitchOrganisation && <OrganisationSwitcher />}
           <LanguageSwitcher className="max-sm:hidden" />
           <ThemePicker />
 
@@ -64,8 +64,8 @@ export default function Header({ toggleMobile, mobileOpen, collapsed, toggleColl
               <div role="menu" className="surface-pop sa-pop absolute right-0 z-50 mt-2 max-h-[calc(100dvh-4.5rem)] w-56 overflow-y-auto overscroll-contain p-1 max-sm:fixed max-sm:inset-x-4 max-sm:top-14 max-sm:mt-0 max-sm:w-auto">
                 <div className="px-3 py-2">
                   <div className="truncate text-sm font-medium text-fg" title={name}>{name}</div>
-                  <div className="text-caption mt-1 truncate" title={me?.user?.email}>{me?.user?.email}</div>
-                  <div className="text-caption truncate">{me?.user?.roleLabel}</div>
+                  <div className="text-caption mt-1 truncate" title={staff?.email}>{staff?.email}</div>
+                  <div className="text-caption truncate">{acting ? t('acting.roleLabel', 'Platform support, viewing {name}', { name: acting.tenantName }) : me?.user?.roleLabel}</div>
                 </div>
                 {/* rarely used controls live here on phones so the top bar never overflows */}
                 <div className="sm:hidden">

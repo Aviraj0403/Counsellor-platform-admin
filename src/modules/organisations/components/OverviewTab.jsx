@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Button, Card, Empty, Input } from '../../../shared/ui/ui';
 import { formatINR, formatDate } from '../../../shared/lib/format';
+import BrandingForm from '../../../shared/ui/BrandingForm.jsx';
 
 const Stat = ({ label, value, hint, tone }) => (
   <div className="surface-card p-4">
@@ -12,7 +13,8 @@ const Stat = ({ label, value, hint, tone }) => (
   </div>
 );
 
-export default function OverviewTab({ ws, base, canRename, onRename, onStatus }) {
+export default function OverviewTab({ ws, base, canRename, onRename, onStatus, onBranding }) {
+  const [saving, setSaving] = useState(false);
   const [name, setName] = useState(ws.organisation.name);
   const attention = ws.modules.filter((m) => m.enabled && m.config?.health === 'attention');
   const addOnTotal = ws.modules.filter((m) => !m.core).length;
@@ -50,6 +52,25 @@ export default function OverviewTab({ ws, base, canRename, onRename, onStatus })
           </ul>
         )}
       </Card>
+
+      {canRename && onBranding && (
+        <Card title="Branding">
+          <BrandingForm
+            name={ws.organisation.name}
+            logoUrl={ws.organisation.logoUrl}
+            brandColor={ws.organisation.brandColor}
+            saving={saving}
+            onSave={async (body) => {
+              setSaving(true);
+              try {
+                await onBranding(body);
+              } finally {
+                setSaving(false);
+              }
+            }}
+          />
+        </Card>
+      )}
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card title="Organisation">

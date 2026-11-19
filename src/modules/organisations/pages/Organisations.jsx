@@ -7,6 +7,7 @@ import * as platformApi from '../api';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { formatDate, slugify } from '../../../shared/lib/format';
 import { useI18n } from '../../../shared/i18n/languageContext.js';
+import OrgAvatar from '../../../shared/ui/OrgAvatar.jsx';
 
 const LIMIT = 20;
 const FETCH = 100; // the API's maximum page size; every page is loaded so search and the status filter cover all organisations
@@ -142,10 +143,15 @@ export default function Organisations() {
                 return (
                   <tr key={o.id} className="hover:bg-surface-2">
                     <td className="px-3 py-2.5">
-                      <Link to={`/organisations/${o.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">
-                        {o.name}
-                      </Link>
-                      <p className="text-caption">{o.slug}</p>
+                      <div className="flex items-center gap-3">
+                        <OrgAvatar name={o.name} logoUrl={o.logoUrl} brandColor={o.brandColor} size="sm" />
+                        <div className="min-w-0">
+                          <Link to={`/organisations/${o.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">
+                            {o.name}
+                          </Link>
+                          <p className="text-caption">{o.slug}</p>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-3 py-2.5">{o.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}</td>
                     <td className="px-3 py-2.5">

@@ -9,3 +9,5 @@ export const logoutEverywhere = () => Axios.post('/auth/logout-all');
 export const mfaSetup = () => Axios.post('/auth/mfa/setup');
 export const mfaEnable = (code) => Axios.post('/auth/mfa/enable', { code });
 export const mfaDisable = (password, code) => Axios.post('/auth/mfa/disable', { password, code });
+// Platform staff only: records that staff are now acting as this organisation (the audit log gets an entry), returns its identity.
+export const startActing = (tenantId, reason) => Axios.post(`/platform/tenants/${tenantId}/acting/start`, reason ? { reason } : {});

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { API_BASE_URL } from './apiConfig';
+import toast from 'react-hot-toast';
+import { clearActingTenant, getActingTenantId } from '../lib/actingTenant';
 import { clearToken, getRefreshToken, getToken, setToken } from './session';
 
 const Axios = axios.create({ baseURL: API_BASE_URL, timeout: 30000 });
@@ -9,6 +11,9 @@ const bare = axios.create({ baseURL: API_BASE_URL, timeout: 30000 });
 Axios.interceptors.request.use((config) => {
   const token = getToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  // Platform staff acting as an organisation: every call is made on that organisation's behalf. Sign-in/refresh/MFA never carry it.
+  const acting = getActingTenantId();
+  if (acting && !/^\/?auth\//.test(config.url || '')) config.headers['x-acting-tenant'] = acting;
   return config;
 });
 
@@ -37,6 +42,16 @@ Axios.interceptors.response.use(
   (res) => res,
   async (err) => {
     const original = err.config;
+    // The API refused the acting header (organisation gone, or no longer allowed): leave acting mode, back to the console.
+    const status = err.response?.status;
+    const code = String(err.response?.data?.error?.code || '');
+    const sentActing = !!original?.headers?.['x-acting-tenant'];
+    if (sentActing && (status === 403 || status === 404) && (/(^|\/)me$/.test(original.url || '') || /ACTING|TENANT/i.test(code))) {
+      clearActingTenant();
+      toast.error('That organisation is no longer available. You are back in the platform console.');
+      window.dispatchEvent(new Event('acting:ended'));
+      return Promise.reject(err);
+    }
     const skip = !original || NO_REFRESH.some((p) => original.url?.includes(p));
     if (err.response?.status !== 401 || skip) return Promise.reject(err);
     if (!original._retried) {

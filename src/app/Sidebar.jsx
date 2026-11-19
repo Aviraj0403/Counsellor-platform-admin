@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../modules/auth';
 import useModalA11y from '../shared/hooks/useModalA11y.js';
 import { useI18n } from '../shared/i18n/languageContext.js';
+import OrgAvatar from '../shared/ui/OrgAvatar.jsx';
 import { NAV_TONE } from '../shared/ui/tones.js';
 import { useRailTip } from '../shared/ui/RailTip.jsx';
 import useVisibleNav from './useVisibleNav';
@@ -26,14 +27,16 @@ const SECTION_STYLE = {
 
 /** Floating, collapsible sidebar (icon rail on desktop, drawer on phones). Same look and behaviour as the ecommerce admin. */
 export default function Sidebar({ collapsed = false, mobileOpen = false, toggleCollapsed, closeMobile }) {
-  const { me, logout } = useAuth();
+  const { me, staff, acting, organisation, logout } = useAuth();
   const { t } = useI18n();
   const sections = useVisibleNav();
   const { bind, node: tipNode } = useRailTip(collapsed);
   const drawerRef = useModalA11y(mobileOpen, closeMobile); // phone drawer: Escape, focus trap + restore, scroll lock
 
-  const initial = (me?.user?.name || 'A')[0].toUpperCase();
-  const roleLabel = me?.user?.roleLabel || me?.user?.role || '';
+  const initial = (staff?.name || 'A')[0].toUpperCase();
+  // Inside an organisation (its own user, or platform staff acting as it) the block shows THAT organisation, like the ecommerce store block.
+  const orgName = organisation?.name || acting?.tenantName || '';
+  const roleLabel = acting ? t('acting.support', 'Platform support') : me?.user?.roleLabel || me?.user?.role || '';
   const collapseLabel = collapsed ? t('shell.expand', 'Expand sidebar') : t('nav.collapse', 'Collapse sidebar');
   const hide = collapsed ? 'lg:hidden' : '';
 
@@ -51,11 +54,15 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, toggleC
       <div className="shell-panel rounded-shell flex min-h-0 flex-1 flex-col overflow-hidden">
         {/* Brand */}
         <div className={`flex shrink-0 items-center gap-3 px-4 pb-3 pt-4 ${collapsed ? 'lg:justify-center lg:px-0' : ''}`}>
-          <span className="brand-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white shadow-sm ring-1 ring-inset ring-white/20">
-            <Sparkles size={18} strokeWidth={2} />
-          </span>
+          {orgName ? (
+            <OrgAvatar name={orgName} logoUrl={organisation?.logoUrl} brandColor={organisation?.brandColor} size="md" />
+          ) : (
+            <span className="brand-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white shadow-sm ring-1 ring-inset ring-white/20">
+              <Sparkles size={18} strokeWidth={2} />
+            </span>
+          )}
           <div className={`min-w-0 flex-1 ${hide}`}>
-            <p className="text-card-title truncate !text-sm leading-tight">{t('shell.brand', 'Counsellor Platform')}</p>
+            <p className="text-card-title truncate !text-sm leading-tight" title={orgName || undefined}>{orgName || t('shell.brand', 'Counsellor Platform')}</p>
             <span className="tone-brand tone-chip mt-1 inline-flex max-w-full items-center truncate rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none">
               {roleLabel}
             </span>
@@ -112,16 +119,16 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, toggleC
           <div className={`flex items-center gap-3 rounded-2xl bg-surface-2 p-2 ring-1 ring-inset ring-line ${collapsed ? 'lg:justify-center lg:bg-transparent lg:p-0 lg:ring-0' : ''}`}>
             <span
               className="brand-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white ring-2 ring-[var(--surface-solid)]"
-              title={collapsed ? me?.user?.name : undefined}
+              title={collapsed ? staff?.name : undefined}
             >
               {initial}
             </span>
             <div className={`min-w-0 flex-1 ${hide}`}>
-              <p className="truncate text-[13px] font-semibold text-fg" title={me?.user?.name}>
-                {me?.user?.name}
+              <p className="truncate text-[13px] font-semibold text-fg" title={staff?.name}>
+                {staff?.name}
               </p>
-              <p className="text-caption truncate !text-[11px]" title={me?.user?.email}>
-                {me?.user?.email}
+              <p className="text-caption truncate !text-[11px]" title={staff?.email}>
+                {staff?.email}
               </p>
             </div>
           </div>

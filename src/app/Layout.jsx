@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../modules/auth';
 import { useI18n } from '../shared/i18n/languageContext.js';
 import { useDensityAttribute } from '../shared/theme/themeContext.js';
 import Ambient from '../shared/ui/Ambient.jsx';
 import { Spinner } from '../shared/ui/ui';
+import ActingBanner from './ActingBanner';
 import Breadcrumbs from './Breadcrumbs';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -20,7 +21,8 @@ const readCollapsed = () => {
 
 /** App shell for every signed-in screen: floating sidebar, sticky header, breadcrumb pill, themed canvas. */
 export default function Layout() {
-  const { me, loading } = useAuth();
+  const { me, loading, acting } = useAuth();
+  const navigate = useNavigate();
   const { t } = useI18n();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,6 +49,13 @@ export default function Layout() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // the API stopped accepting the acting organisation (Axios cleared it): the page we were on belongs to it, so go home
+  useEffect(() => {
+    const onEnded = () => navigate('/', { replace: true });
+    window.addEventListener('acting:ended', onEnded);
+    return () => window.removeEventListener('acting:ended', onEnded);
+  }, [navigate]);
+
   if (loading) return <Spinner label={t('common.loading', 'Loading...')} />;
   if (!me) return <Navigate to="/signin" replace state={{ from: location.pathname }} />;
 
@@ -67,13 +76,14 @@ export default function Layout() {
 
         <div className="relative z-10 flex min-w-0 flex-1 flex-col">
           <Header toggleMobile={toggleMobile} mobileOpen={mobileOpen} collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
+          <ActingBanner />
           <main id="main-content" className="min-w-0 flex-1 overflow-y-auto scroll-smooth">
             <div className="page-container flex min-h-full min-w-0 flex-col">
               <div className="mb-4 flex min-w-0">
                 <Breadcrumbs />
               </div>
               <div className="min-w-0 flex-1">
-                <Outlet />
+                <Outlet key={acting?.tenantId || 'console'} />
               </div>
             </div>
           </main>
