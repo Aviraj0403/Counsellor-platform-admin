@@ -6,6 +6,7 @@ import colleges from '../modules/colleges/module';
 import commissions from '../modules/commissions/module';
 import dashboard from '../modules/dashboard/module';
 import documents from '../modules/documents/module';
+import domains from '../modules/domains/module';
 import insights from '../modules/insights/module';
 import followups from '../modules/followups/module';
 import leads from '../modules/leads/module';
@@ -25,4 +26,4 @@ import whatsapp from '../modules/whatsapp/module';
  * and add ONE line here. Routes and the sidebar are built from this list; nothing else needs editing.
  * (The catalog module has no screens of its own, it only exposes a hook, so it is not listed.)
  */
-export const MODULES = [dashboard, organisations, billing, insights, audit, leads, followups, ledger, students, colleges, applications, documents, commissions, reports, metaAds, portal, publicApi, seoPages, team, whatsapp, auth];
+export const MODULES = [dashboard, organisations, billing, insights, audit, leads, followups, ledger, students, colleges, applications, documents, domains, commissions, reports, metaAds, portal, publicApi, seoPages, team, whatsapp, auth];
