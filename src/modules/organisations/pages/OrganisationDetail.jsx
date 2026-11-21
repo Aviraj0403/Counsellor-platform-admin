@@ -128,11 +128,14 @@ export default function OrganisationDetail() {
           <p className="text-eyebrow">Organisation workspace</p>
           <h1 className="flex flex-wrap items-center gap-3 text-xl font-semibold text-fg">
             <span className="truncate">{o.name}</span>
+            <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-surface-2 text-brand-600 border border-line">
+              #{o.projectId || String(o.id).slice(-5).padStart(5, '0')}
+            </span>
             {suspended ? <Badge tone="red">Suspended</Badge> : <Badge tone="green">Active</Badge>}
             {ws.health.needsAttention > 0 && <Badge tone="amber">{ws.health.needsAttention} need attention</Badge>}
           </h1>
           <p className="text-caption mt-1">
-            Address: <span className="font-mono">{o.slug}</span> · {ws.plan.name || 'no plan'} · created {formatDate(o.createdAt)}
+            Tenant ID: <span className="font-mono font-semibold">{o.projectId || String(o.id).slice(-5).padStart(5, '0')}</span> · Address: <span className="font-mono">{o.slug}</span> · {ws.plan.name || 'no plan'} · created {formatDate(o.createdAt)}
           </p>
         </div>
         <p className="text-caption max-w-xs">Set-up and health only. This organisation's students, leads and records are not visible here.</p>

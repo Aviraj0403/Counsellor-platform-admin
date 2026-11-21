@@ -144,11 +144,17 @@ export default function Organisations() {
           <Empty>No organisation matches this search or filter.</Empty>
         ) : (
           <>
-            <Table head={['Name', 'Status', 'Add-on features on', 'Created', '']}>
+            <Table head={['Tenant ID', 'Name', 'Status', 'Add-on features on', 'Created', '']}>
               {pageRows.map((o) => {
                 const on = chips(o);
+                const pId = o.projectId || (o.id ? String(o.id).slice(-5).padStart(5, '0') : '00001');
                 return (
                   <tr key={o.id} className="hover:bg-surface-2">
+                    <td className="px-3 py-2.5 font-mono text-xs font-bold text-fg-secondary">
+                      <span className="rounded bg-surface-2 px-2 py-0.5 border border-line">
+                        {pId}
+                      </span>
+                    </td>
                     <td className="px-3 py-2.5">
                       <div className="flex items-center gap-3">
                         <OrgAvatar name={o.name} logoUrl={o.logoUrl} brandColor={o.brandColor} size="sm" />

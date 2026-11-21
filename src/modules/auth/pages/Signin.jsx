@@ -63,7 +63,7 @@ export default function Signin() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [mfaToken, setMfaToken] = useState(null);
@@ -79,7 +79,7 @@ export default function Signin() {
       if (mfaToken) {
         await verifyMfa(mfaToken, useRecovery ? { recoveryCode: code.trim() } : { code: code.trim() });
       } else {
-        const r = await login(email.trim(), password);
+        const r = await login(identifier.trim(), password);
         if (r?.mfaRequired) {
           setMfaToken(r.mfaToken);
           return;
@@ -134,8 +134,15 @@ export default function Signin() {
           </>
         ) : (
           <>
-            <Field label={t('auth.email', 'Email')}>
-              <Input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Field label="Email or Mobile / Tenant ID">
+              <Input
+                type="text"
+                autoComplete="username"
+                required
+                placeholder="name@agency.com or +91XXXXXXXXXX"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+              />
             </Field>
             <Field label={t('auth.password', 'Password')}>
               <Input type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
