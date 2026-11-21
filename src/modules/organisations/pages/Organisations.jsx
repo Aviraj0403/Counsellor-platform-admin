@@ -83,7 +83,14 @@ export default function Organisations() {
       <PageHeader
         title={t('page.organisations', 'Organisations')}
         subtitle="Each counsellor business that uses the platform. Open one to switch features on or off, change its plan, or suspend it. The owner login is shown only once, when you create the organisation."
-        action={!form && <Button onClick={() => setForm(BLANK)}>+ New organisation</Button>}
+        action={
+          <div className="flex gap-2">
+            <Link to="/organisations/onboard">
+              <Button variant="primary">+ Onboard organisation wizard</Button>
+            </Link>
+            {!form && <Button variant="secondary" onClick={() => setForm(BLANK)}>Quick create</Button>}
+          </div>
+        }
       />
 
       {form && (
