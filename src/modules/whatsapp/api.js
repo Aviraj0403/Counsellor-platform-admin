@@ -12,6 +12,12 @@ export const createRule = (body) => Axios.post('/whatsapp/rules', body);
 export const updateRule = (id, body) => Axios.patch(`/whatsapp/rules/${id}`, body);
 export const deleteRule = (id) => Axios.delete(`/whatsapp/rules/${id}`);
 
+// Broadcast campaigns
+export const listCampaigns = () => Axios.get('/whatsapp/campaigns');
+export const getCampaign = (id) => Axios.get(`/whatsapp/campaigns/${id}`);
+export const createCampaign = (body) => Axios.post('/whatsapp/campaigns', body);
+export const executeCampaign = (id) => Axios.post(`/whatsapp/campaigns/${id}/execute`);
+
 // Recipient pickers for the "Send message" tab. They use the leads / students HTTP APIs directly (same approach as appointments and students),
 // not a code import of those modules. A role without leads:read / students:read simply gets no suggestions.
 export const searchLeads = (search) => Axios.get('/leads', { params: { search, limit: 6 } });

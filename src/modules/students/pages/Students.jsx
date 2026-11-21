@@ -9,7 +9,7 @@ import { formatDate } from '../../../shared/lib/format';
 const LIMIT = 25;
 
 export default function Students() {
-  const { can } = useAuth();
+  const { me, can } = useAuth();
   const [search, setSearch] = useState('');
   const [includeErased, setIncludeErased] = useState(false);
   const [page, setPage] = useState(1);
@@ -51,13 +51,22 @@ export default function Students() {
           <Empty>No students found.</Empty>
         ) : (
           <>
-            <Table head={['Student', 'Phone', 'City', 'Status', 'Added']}>
+            <Table head={['Student', 'Phone', 'City', 'Status', 'Assignment', 'Added']}>
               {data.items.map((s) => (
                 <tr key={s._id}>
                   <td className="px-3 py-2.5 font-medium"><Link className="underline" to={`/students/${s._id}`}>{s.name}</Link></td>
                   <td className="px-3 py-2.5 text-fg-secondary">{s.phone || ','}</td>
                   <td className="px-3 py-2.5 text-fg-muted">{s.address?.city || ','}</td>
                   <td className="px-3 py-2.5"><Badge tone={s.status === 'erased' ? 'red' : 'green'}>{s.status}</Badge></td>
+                  <td className="px-3 py-2.5">
+                    {s.assignedTo === me?.userId ? (
+                      <Badge tone="blue">Assigned to you</Badge>
+                    ) : s.assignedTo ? (
+                      <Badge tone="gray">Assigned</Badge>
+                    ) : (
+                      <Badge tone="amber">Unassigned</Badge>
+                    )}
+                  </td>
                   <td className="px-3 py-2.5 text-fg-muted">{formatDate(s.createdAt)}</td>
                 </tr>
               ))}

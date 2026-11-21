@@ -10,3 +10,4 @@ export const updateCourse = (id, courseId, body) => Axios.patch(`/colleges/${id}
 export const deactivateCourse = (id, courseId) => Axios.delete(`/colleges/${id}/courses/${courseId}`);
 export const importColleges = (rows) => Axios.post('/colleges/import', { rows });
 export const shortlist = (body) => Axios.post('/colleges/shortlist', body);
+export const predictColleges = (body) => Axios.post('/colleges/predict', body);

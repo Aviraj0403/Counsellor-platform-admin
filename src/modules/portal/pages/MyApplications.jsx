@@ -82,6 +82,7 @@ function ApplicationCard({ app, onChange }) {
 /** The student's own view: where each application stands, what is missing, and a way to upload it. */
 export default function MyApplications() {
   const [data, setData] = useState(null);
+  const [copied, setCopied] = useState(false);
   const load = useCallback(async () => {
     try {
       setData((await api.studentOverview()).data);
@@ -93,10 +94,100 @@ export default function MyApplications() {
     load();
   }, [load]);
 
+  const copyReferral = () => {
+    if (!data?.referral?.referralCode) return;
+    const url = `${window.location.origin}/enquiry?ref=${data.referral.referralCode}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (!data) return <Spinner />;
   return (
     <>
-      <PageHeader title="My application" subtitle={`Hello ${data.profile.name}. Follow your applications and upload the documents we ask for.`} />
+      <PageHeader
+        title="Student Portal"
+        subtitle={`Welcome, ${data.profile.name}. Track your admission progress and complete document uploads.`}
+      />
+
+      {/* Top Banner: Assigned Counsellor & Referral Card */}
+      <div className="mb-6 grid gap-4 md:grid-cols-2">
+        {data.counsellor ? (
+          <Card className="flex items-center justify-between border-l-4 border-l-brand-600 bg-brand-50/30 p-4">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-brand-700">Your Assigned Counsellor</span>
+              <h3 className="text-base font-bold text-fg">{data.counsellor.name}</h3>
+              <p className="text-xs text-fg-muted">Available to guide you through counselling rounds</p>
+            </div>
+            <a
+              href={`https://wa.me/?text=Hello%20${encodeURIComponent(data.counsellor.name)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700"
+            >
+              WhatsApp Support
+            </a>
+          </Card>
+        ) : (
+          <Card className="p-4">
+            <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Counsellor</span>
+            <p className="text-sm text-fg">Your dedicated counsellor will be assigned shortly.</p>
+          </Card>
+        )}
+
+        {data.referral && (
+          <Card className="flex items-center justify-between border-l-4 border-l-purple-600 bg-purple-50/30 p-4">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-purple-700">Refer a Friend & Earn ₹2,000</span>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="rounded bg-purple-100 px-2 py-0.5 font-mono text-xs font-bold text-purple-800">
+                  {data.referral.referralCode}
+                </span>
+                <span className="text-xs text-fg-muted">Share your link</span>
+              </div>
+            </div>
+            <Button size="sm" variant="secondary" onClick={copyReferral}>
+              {copied ? 'Copied Link!' : 'Copy Invite Link'}
+            </Button>
+          </Card>
+        )}
+      </div>
+
+      {/* Pending Fees & Seat Booking Payments */}
+      {data.feeLinks?.length > 0 && (
+        <Card className="mb-6 p-4">
+          <h3 className="mb-2 text-sm font-semibold text-fg">Pending Fees & Seat Booking Deposits</h3>
+          <div className="divide-y divide-line">
+            {data.feeLinks.map((f) => (
+              <div key={f._id} className="flex items-center justify-between py-2 text-sm">
+                <div>
+                  <div className="font-medium text-fg">{f.title}</div>
+                  <div className="text-xs text-fg-muted">Amount: ₹{(f.amountPaise / 100).toLocaleString('en-IN')}</div>
+                </div>
+                <div>
+                  {f.status === 'paid' ? (
+                    <Badge tone="success">Paid</Badge>
+                  ) : (
+                    <a
+                      href={f.shortUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700"
+                    >
+                      Pay Online (Razorpay)
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-fg">Your Applications</h3>
+      </div>
+
       {data.applications.length === 0 ? (
         <Empty>No applications yet. Your counsellor will add them.</Empty>
       ) : (

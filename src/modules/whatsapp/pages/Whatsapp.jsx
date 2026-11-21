@@ -7,6 +7,7 @@ import MessageLogTab from '../components/MessageLogTab';
 import RulesTab from '../components/RulesTab';
 import StatusStrip from '../components/StatusStrip';
 import TemplatesTab from '../components/TemplatesTab';
+import CampaignsTab from '../components/CampaignsTab';
 
 /** WhatsApp for an organisation: templates, automation rules, the message log and a send box. Always sent from the shared platform number. */
 export default function Whatsapp() {
@@ -14,7 +15,7 @@ export default function Whatsapp() {
   const manage = can('integrations:manage');
   const tabs = [
     ['templates', 'Templates'],
-    ...(manage ? [['rules', 'Automation rules']] : []),
+    ...(manage ? [['campaigns', 'Broadcast Campaigns'], ['rules', 'Automation rules']] : []),
     ['log', 'Message log'],
     ['send', 'Send message'],
   ];
@@ -48,6 +49,7 @@ export default function Whatsapp() {
       <Card>
         <div role="tabpanel" aria-label={tab}>
           {tab === 'templates' && <TemplatesTab manage={manage} />}
+          {tab === 'campaigns' && manage && <CampaignsTab manage={manage} />}
           {tab === 'rules' && manage && <RulesTab />}
           {tab === 'log' && <MessageLogTab onLatest={setLatest} refreshKey={logKey} />}
           {tab === 'send' && <ComposeTab onSent={() => { setLogKey((k) => k + 1); setTab('log'); }} />}
