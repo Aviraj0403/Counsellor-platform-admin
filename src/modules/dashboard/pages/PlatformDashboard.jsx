@@ -78,24 +78,50 @@ export default function PlatformDashboard() {
               ) : orgs.tenants.length === 0 ? (
                 <Empty>No organisations yet. Create the first one.</Empty>
               ) : (
-                <Table head={['Name', 'Status', 'Add-ons on', 'Created']}>
-                  {orgs.tenants.slice(0, 8).map((x) => (
-                    <tr key={x.id} className="hover:bg-surface-2">
-                      <td className="px-3 py-2.5">
-                        <div className="flex items-center gap-3">
+                <>
+                  {/* Desktop Table */}
+                  <div className="hidden md:block">
+                    <Table head={['Name', 'Status', 'Add-ons on', 'Created']}>
+                      {orgs.tenants.slice(0, 8).map((x) => (
+                        <tr key={x.id} className="hover:bg-surface-2">
+                          <td className="px-3 py-2.5">
+                            <div className="flex items-center gap-3">
+                              <OrgAvatar name={x.name} logoUrl={x.logoUrl} brandColor={x.brandColor} size="sm" />
+                              <div className="min-w-0">
+                                <Link to={`/organisations/${x.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">{x.name}</Link>
+                                <p className="text-caption">{x.slug}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2.5">{x.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}</td>
+                          <td className="px-3 py-2.5 text-fg-muted">{addOnsOn(x.modules).length}</td>
+                          <td className="px-3 py-2.5 text-fg-muted">{formatDate(x.createdAt)}</td>
+                        </tr>
+                      ))}
+                    </Table>
+                  </div>
+
+                  {/* Mobile Cards */}
+                  <div className="grid gap-3 md:hidden">
+                    {orgs.tenants.slice(0, 8).map((x) => (
+                      <div key={x.id} className="rounded-xl border border-line bg-surface-2/40 p-3 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
                           <OrgAvatar name={x.name} logoUrl={x.logoUrl} brandColor={x.brandColor} size="sm" />
                           <div className="min-w-0">
-                            <Link to={`/organisations/${x.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">{x.name}</Link>
-                            <p className="text-caption">{x.slug}</p>
+                            <Link to={`/organisations/${x.id}`} className="font-medium text-fg hover:underline truncate block text-sm">{x.name}</Link>
+                            <p className="text-xs text-fg-muted font-mono">{x.slug}</p>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-3 py-2.5">{x.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}</td>
-                      <td className="px-3 py-2.5 text-fg-muted">{addOnsOn(x.modules).length}</td>
-                      <td className="px-3 py-2.5 text-fg-muted">{formatDate(x.createdAt)}</td>
-                    </tr>
-                  ))}
-                </Table>
+                        <div className="shrink-0 flex items-center gap-2">
+                          {x.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}
+                          <Link to={`/organisations/${x.id}`}>
+                            <Button size="sm" variant="secondary">Open</Button>
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </Card>
           </div>

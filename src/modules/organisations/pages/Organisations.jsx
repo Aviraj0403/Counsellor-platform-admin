@@ -144,54 +144,113 @@ export default function Organisations() {
           <Empty>No organisation matches this search or filter.</Empty>
         ) : (
           <>
-            <Table head={['Tenant ID', 'Name', 'Status', 'Add-on features on', 'Created', '']}>
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <Table head={['Tenant ID', 'Name', 'Status', 'Add-on features on', 'Created', '']}>
+                {pageRows.map((o) => {
+                  const on = chips(o);
+                  const pId = o.projectId || (o.id ? String(o.id).slice(-5).padStart(5, '0') : '00001');
+                  return (
+                    <tr key={o.id} className="hover:bg-surface-2">
+                      <td className="px-3 py-2.5 font-mono text-xs font-bold text-fg-secondary">
+                        <span className="rounded bg-surface-2 px-2 py-0.5 border border-line">
+                          {pId}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <div className="flex items-center gap-3">
+                          <OrgAvatar name={o.name} logoUrl={o.logoUrl} brandColor={o.brandColor} size="sm" />
+                          <div className="min-w-0">
+                            <Link to={`/organisations/${o.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">
+                              {o.name}
+                            </Link>
+                            <p className="text-caption">{o.slug}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2.5">{o.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}</td>
+                      <td className="px-3 py-2.5">
+                        {on.length === 0 ? (
+                          <span className="text-fg-muted">Core only</span>
+                        ) : (
+                          <div className="flex flex-wrap gap-1">
+                            {on.slice(0, MAX_CHIPS).map((m) => <Badge key={m.key} tone="blue">{m.label}</Badge>)}
+                            {on.length > MAX_CHIPS && <span className="text-caption" title={on.slice(MAX_CHIPS).map((m) => m.label).join(', ')}>+{on.length - MAX_CHIPS} more</span>}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-fg-muted">{formatDate(o.createdAt)}</td>
+                      <td className="px-3 py-2.5 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Link to={`/organisations/${o.id}`}><Button size="sm" variant="secondary">Manage</Button></Link>
+                          {o.status === 'active' ? (
+                            <Button size="sm" variant="danger" onClick={() => setOrgStatus(o, 'suspended')}>Suspend</Button>
+                          ) : (
+                            <Button size="sm" onClick={() => setOrgStatus(o, 'active')}>Reactivate</Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </Table>
+            </div>
+
+            {/* Mobile Card Grid (Phone-first) */}
+            <div className="grid gap-3 md:hidden">
               {pageRows.map((o) => {
                 const on = chips(o);
                 const pId = o.projectId || (o.id ? String(o.id).slice(-5).padStart(5, '0') : '00001');
                 return (
-                  <tr key={o.id} className="hover:bg-surface-2">
-                    <td className="px-3 py-2.5 font-mono text-xs font-bold text-fg-secondary">
-                      <span className="rounded bg-surface-2 px-2 py-0.5 border border-line">
-                        {pId}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5">
+                  <div key={o.id} className="rounded-xl border border-line bg-surface-2/40 p-4 shadow-sm space-y-3">
+                    <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-3">
                         <OrgAvatar name={o.name} logoUrl={o.logoUrl} brandColor={o.brandColor} size="sm" />
-                        <div className="min-w-0">
-                          <Link to={`/organisations/${o.id}`} className="font-medium text-brand-600 hover:underline dark:text-brand-300">
-                            {o.name}
-                          </Link>
-                          <p className="text-caption">{o.slug}</p>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[11px] font-bold px-1.5 py-0.5 rounded bg-surface-2 text-fg-secondary border border-line">
+                              #{pId}
+                            </span>
+                            <Link to={`/organisations/${o.id}`} className="font-semibold text-fg hover:underline text-base block">
+                              {o.name}
+                            </Link>
+                          </div>
+                          <p className="text-xs text-fg-muted font-mono">{o.slug}</p>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-3 py-2.5">{o.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}</td>
-                    <td className="px-3 py-2.5">
-                      {on.length === 0 ? (
-                        <span className="text-fg-muted">Core only</span>
-                      ) : (
-                        <div className="flex flex-wrap gap-1">
-                          {on.slice(0, MAX_CHIPS).map((m) => <Badge key={m.key} tone="blue">{m.label}</Badge>)}
-                          {on.length > MAX_CHIPS && <span className="text-caption" title={on.slice(MAX_CHIPS).map((m) => m.label).join(', ')}>+{on.length - MAX_CHIPS} more</span>}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-3 py-2.5 text-fg-muted">{formatDate(o.createdAt)}</td>
-                    <td className="px-3 py-2.5 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link to={`/organisations/${o.id}`}><Button size="sm" variant="secondary">Manage</Button></Link>
-                        {o.status === 'active' ? (
-                          <Button size="sm" variant="danger" onClick={() => setOrgStatus(o, 'suspended')}>Suspend</Button>
+                      {o.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="red">Suspended</Badge>}
+                    </div>
+
+                    <div className="text-xs text-fg-muted space-y-1">
+                      <div className="flex flex-wrap gap-1 items-center">
+                        <span className="font-medium text-fg-secondary">Modules:</span>
+                        {on.length === 0 ? (
+                          <span className="text-fg-muted">Core only</span>
                         ) : (
-                          <Button size="sm" onClick={() => setOrgStatus(o, 'active')}>Reactivate</Button>
+                          on.slice(0, 3).map((m) => <Badge key={m.key} tone="blue">{m.label}</Badge>)
                         )}
+                        {on.length > 3 && <span className="text-caption">+{on.length - 3}</span>}
                       </div>
-                    </td>
-                  </tr>
+                      <div className="text-[11px] text-fg-muted pt-1">
+                        Created: {formatDate(o.createdAt)}
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-line flex items-center justify-between gap-2">
+                      <Link to={`/organisations/${o.id}`} className="flex-1">
+                        <Button size="sm" variant="secondary" className="w-full">Manage Tenant</Button>
+                      </Link>
+                      {o.status === 'active' ? (
+                        <Button size="sm" variant="danger" onClick={() => setOrgStatus(o, 'suspended')}>Suspend</Button>
+                      ) : (
+                        <Button size="sm" onClick={() => setOrgStatus(o, 'active')}>Reactivate</Button>
+                      )}
+                    </div>
+                  </div>
                 );
               })}
-            </Table>
+            </div>
+
             <Pager page={page} limit={LIMIT} total={filtered.length} onPage={setPage} />
           </>
         )}

@@ -83,7 +83,7 @@ export function Modal({ title, onClose, children }) {
 
 export function Table({ head, children }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="table-scroll-wrapper scrollbar-thin">
       <table className="modern-table">
         {Array.isArray(head) && head.length > 0 && (
           <thead>

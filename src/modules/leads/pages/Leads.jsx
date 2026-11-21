@@ -135,27 +135,73 @@ export default function Leads() {
           <Empty>No leads found.</Empty>
         ) : (
           <>
-            <Table head={['Student', 'Phone', 'City / course', 'Source', 'Stage', 'Owner', 'Added']}>
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <Table head={['Student', 'Phone', 'City / course', 'Source', 'Stage', 'Owner', 'Added']}>
+                {data.items.map((l) => (
+                  <tr key={l._id}>
+                    <td className="px-3 py-2.5 font-medium"><Link to={`/leads/${l._id}`} className="hover:underline">{l.name}</Link></td>
+                    <td className="px-3 py-2.5 text-fg-secondary">{l.phone}</td>
+                    <td className="px-3 py-2.5 text-fg-muted">{[l.city, l.interestedCourse].filter(Boolean).join(' · ') || '—'}</td>
+                    <td className="px-3 py-2.5 text-fg-muted capitalize">{humanize(l.source?.channel)}</td>
+                    <td className="px-3 py-2.5">
+                      {can('leads:write') ? (
+                        <Select value={l.stage} onChange={(e) => move(l, e.target.value)} className="!py-1" aria-label={`Stage of ${l.name}`}>
+                          {STAGES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
+                        </Select>
+                      ) : (
+                        <Badge tone={TONE[l.stage]}>{humanize(l.stage)}</Badge>
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5">{l.assignedTo ? <Badge tone="blue">Assigned</Badge> : <Badge>Unassigned</Badge>}</td>
+                    <td className="px-3 py-2.5 text-fg-muted">{formatDate(l.createdAt)}</td>
+                  </tr>
+                ))}
+              </Table>
+            </div>
+
+            {/* Mobile Touch-Optimized Card Grid (iOS / Android) */}
+            <div className="grid gap-3 md:hidden">
               {data.items.map((l) => (
-                <tr key={l._id}>
-                  <td className="px-3 py-2.5 font-medium"><Link to={`/leads/${l._id}`} className="hover:underline">{l.name}</Link></td>
-                  <td className="px-3 py-2.5 text-fg-secondary">{l.phone}</td>
-                  <td className="px-3 py-2.5 text-fg-muted">{[l.city, l.interestedCourse].filter(Boolean).join(' · ') || ','}</td>
-                  <td className="px-3 py-2.5 text-fg-muted capitalize">{humanize(l.source?.channel)}</td>
-                  <td className="px-3 py-2.5">
+                <div key={l._id} className="rounded-xl border border-line bg-surface-2/40 p-4 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <Link to={`/leads/${l._id}`} className="font-semibold text-fg hover:underline text-base block">
+                        {l.name}
+                      </Link>
+                      <a href={`tel:${l.phone}`} className="text-xs text-brand-600 font-mono mt-0.5 inline-block">
+                        {l.phone}
+                      </a>
+                    </div>
+                    <Badge tone={TONE[l.stage]}>{humanize(l.stage)}</Badge>
+                  </div>
+
+                  <div className="text-xs text-fg-muted space-y-1">
+                    <div>Course: <span className="text-fg font-medium">{[l.city, l.interestedCourse].filter(Boolean).join(' · ') || 'Not specified'}</span></div>
+                    <div className="flex items-center justify-between">
+                      <span>Source: <span className="capitalize text-fg-secondary">{humanize(l.source?.channel)}</span></span>
+                      <span>{formatDate(l.createdAt)}</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-line flex items-center justify-between gap-2">
                     {can('leads:write') ? (
-                      <Select value={l.stage} onChange={(e) => move(l, e.target.value)} className="!py-1" aria-label={`Stage of ${l.name}`}>
-                        {STAGES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
-                      </Select>
+                      <div className="flex-1">
+                        <Select value={l.stage} onChange={(e) => move(l, e.target.value)} className="!py-1.5 text-xs w-full">
+                          {STAGES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
+                        </Select>
+                      </div>
                     ) : (
-                      <Badge tone={TONE[l.stage]}>{humanize(l.stage)}</Badge>
+                      <div className="text-xs text-fg-muted">{l.assignedTo ? 'Assigned' : 'Unassigned'}</div>
                     )}
-                  </td>
-                  <td className="px-3 py-2.5">{l.assignedTo ? <Badge tone="blue">Assigned</Badge> : <Badge>Unassigned</Badge>}</td>
-                  <td className="px-3 py-2.5 text-fg-muted">{formatDate(l.createdAt)}</td>
-                </tr>
+                    <Link to={`/leads/${l._id}`} className="shrink-0">
+                      <Button size="sm" variant="secondary">View Lead</Button>
+                    </Link>
+                  </div>
+                </div>
               ))}
-            </Table>
+            </div>
+
             <Pager page={data.page} limit={data.limit} total={data.total} onPage={setPage} />
           </>
         )}
