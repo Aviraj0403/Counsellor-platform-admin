@@ -56,20 +56,20 @@ export default function LeadSourcesHub() {
         </div>
 
         <div className="rounded-2xl border border-line bg-surface p-4 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wider text-purple-600">Cutoff Predictor</div>
-          <div className="mt-2 text-2xl font-bold text-purple-700">Viral Magnet</div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-300">Cutoff Predictor</div>
+          <div className="mt-2 text-2xl font-bold text-purple-700 dark:text-purple-300">Viral Magnet</div>
           <p className="text-caption mt-1">Students checking JEE / CET cutoffs</p>
         </div>
 
         <div className="rounded-2xl border border-line bg-surface p-4 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wider text-blue-600">Lead Portals & Ads</div>
-          <div className="mt-2 text-2xl font-bold text-blue-700">Universal API</div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-300">Lead Portals & Ads</div>
+          <div className="mt-2 text-2xl font-bold text-blue-700 dark:text-blue-300">Universal API</div>
           <p className="text-caption mt-1">Justdial, Meta Ads, Google Ads</p>
         </div>
 
         <div className="rounded-2xl border border-line bg-surface p-4 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-600">DPDP & TRAI Safe</div>
-          <div className="mt-2 text-2xl font-bold text-emerald-700">100% Consent</div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">DPDP & TRAI Safe</div>
+          <div className="mt-2 text-2xl font-bold text-emerald-700 dark:text-emerald-300">100% Consent</div>
           <p className="text-caption mt-1">Zero spam ban risk on WhatsApp</p>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function LeadSourcesHub() {
                 onClick={() => copyToClipboard(universalWebhookUrl, 'webhook')}
                 className="shrink-0"
               >
-                {copiedKey === 'webhook' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+                {copiedKey === 'webhook' ? <Check size={14} className="text-emerald-600 dark:text-emerald-300" /> : <Copy size={14} />}
                 {copiedKey === 'webhook' ? 'Copied' : 'Copy URL'}
               </Button>
             </div>
@@ -140,7 +140,7 @@ export default function LeadSourcesHub() {
               variant="secondary"
               onClick={() => copyToClipboard(predictorUrl, 'predictor')}
             >
-              {copiedKey === 'predictor' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+              {copiedKey === 'predictor' ? <Check size={14} className="text-emerald-600 dark:text-emerald-300" /> : <Copy size={14} />}
               {copiedKey === 'predictor' ? 'Copied Link' : 'Copy Student Share Link'}
             </Button>
           </div>
@@ -170,7 +170,7 @@ export default function LeadSourcesHub() {
                 onClick={() => copyToClipboard(poptinSdkSnippet, 'poptin')}
                 className="shrink-0"
               >
-                {copiedKey === 'poptin' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+                {copiedKey === 'poptin' ? <Check size={14} className="text-emerald-600 dark:text-emerald-300" /> : <Copy size={14} />}
                 {copiedKey === 'poptin' ? 'Copied' : 'Copy Script'}
               </Button>
             </div>
@@ -204,13 +204,13 @@ export default function LeadSourcesHub() {
 
             <div className="rounded-xl border border-line p-4 bg-surface-2/40">
               <div className="flex items-center gap-2 mb-2 font-semibold text-fg text-sm">
-                <PhoneCall size={18} className="text-emerald-600" />
+                <PhoneCall size={18} className="text-emerald-600 dark:text-emerald-300" />
                 Missed-Call Campaign Setup
               </div>
               <p className="text-xs text-fg-muted mb-3">
                 Print on newspaper flyers: <i>"Give a missed call to get cutoff list on WhatsApp"</i>. Integrate your virtual number (Exotel / Tata Tele / Twilio) to our webhook.
               </p>
-              <span className="inline-flex items-center gap-1 text-xs font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+              <span className="inline-flex items-center gap-1 text-xs font-mono text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded">
                 ⚡ Auto-replies with PDF Brochure via WhatsApp
               </span>
             </div>

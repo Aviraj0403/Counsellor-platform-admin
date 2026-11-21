@@ -123,7 +123,7 @@ export default function CampaignsTab({ manage }) {
         )}
       </div>
 
-      {err && <div className="rounded-md bg-rose-50 p-3 text-sm text-rose-800">{err}</div>}
+      {err && <div className="rounded-md bg-rose-50 dark:bg-rose-500/10 p-3 text-sm text-rose-800 dark:text-rose-300">{err}</div>}
 
       {showCreate && (
         <form onSubmit={handleCreate} className="space-y-4 rounded-lg border border-line bg-surface p-4">
@@ -231,7 +231,7 @@ export default function CampaignsTab({ manage }) {
                 <td className="text-xs text-fg-muted">
                   {c.status === 'completed' ? (
                     <span>
-                      <strong className="text-emerald-700">{c.stats?.sent || 0}</strong> sent / {c.stats?.total || 0} total ({c.stats?.skippedNoConsent || 0} skipped)
+                      <strong className="text-emerald-700 dark:text-emerald-300">{c.stats?.sent || 0}</strong> sent / {c.stats?.total || 0} total ({c.stats?.skippedNoConsent || 0} skipped)
                     </span>
                   ) : (
                     <span>—</span>

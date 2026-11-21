@@ -77,7 +77,7 @@ export default function Referrals() {
         subtitle="Track student referrals, measure viral word-of-mouth admissions, and disburse rewards."
       />
 
-      {err && <div className="rounded-md bg-rose-50 p-3 text-sm text-rose-800">{err}</div>}
+      {err && <div className="rounded-md bg-rose-50 dark:bg-rose-500/10 p-3 text-sm text-rose-800 dark:text-rose-300">{err}</div>}
 
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-1">
@@ -163,7 +163,7 @@ export default function Referrals() {
                       <span className="font-mono text-xs">{r.referralCode}</span>
                     </td>
                     <td>{getStatusBadge(r.status)}</td>
-                    <td className="text-sm font-medium text-emerald-700">₹{r.rewardAmountRupees}</td>
+                    <td className="text-sm font-medium text-emerald-700 dark:text-emerald-300">₹{r.rewardAmountRupees}</td>
                     <td className="text-right space-x-1">
                       {r.status === 'pending' && (
                         <Button size="xs" variant="secondary" onClick={() => handleUpdateStatus(r._id, 'enrolled')}>

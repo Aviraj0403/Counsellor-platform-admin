@@ -69,7 +69,50 @@
   --color-canvas: var(--bg-base);
 }
 
-/* ───────────────────────── CLASSIC (default) ─────────────────────────
+/* ───────────────────────── FAST ADMISSION (brand: cerulean blue + navy + gold) ─────────────────────────
+   Sampled from the FastAdmission logo (#0a96d0 emblem, #f5a623 star) and the fastadmission.in navy. Default theme. */
+:root,
+:root[data-theme="fast"] {
+  --brand-50: #eef8fd; --brand-100: #d6eefa; --brand-200: #b0dff5; --brand-300: #76c8ec; --brand-400: #2fb0e2;
+  --brand-500: #0a96d0; --brand-600: #0a7db4; --brand-700: #0b6492; --brand-800: #0d4f74;
+  --accent-50: #fff8eb; --accent-100: #feeccb; --accent-200: #fcd896; --accent-300: #fabf55; --accent-400: #f7a826;
+  --accent-500: #f5a623; --accent-600: #d98a0b; --accent-700: #b46d0a;
+  --gradient-primary: linear-gradient(135deg, #0b3f8f 0%, #0a7db4 55%, #0a96d0 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(10,150,208,0.14) 0%, rgba(11,63,143,0.10) 55%, rgba(245,166,35,0.10) 100%);
+  --on-brand: #ffffff;
+  --tone-indigo: #3b6fe0; --tone-emerald: #10a37f; --tone-amber: #f5a623; --tone-rose: #e5484d;
+  --tone-sky: #0a96d0; --tone-violet: #6a5ae0; --tone-orange: #f2711c; --tone-teal: #0fb5ae;
+  --chart-1: #0a96d0; --chart-2: #10a37f; --chart-3: #f5a623; --chart-4: #e5484d;
+  --chart-5: #3b6fe0; --chart-6: #6a5ae0; --chart-7: #f2711c; --chart-8: #0fb5ae;
+  --bg-base: #f3f7fb;
+  --bg-wash:
+    radial-gradient(60rem 36rem at 92% -8%, rgba(10, 150, 208, 0.07), transparent 60%),
+    radial-gradient(48rem 32rem at -8% 6%, rgba(11, 63, 143, 0.07), transparent 58%),
+    radial-gradient(36rem 26rem at 60% 115%, rgba(245, 166, 35, 0.06), transparent 60%);
+  --glow-1: rgba(10, 150, 208, 0.12);
+  --glow-2: rgba(11, 63, 143, 0.08);
+  --surface-border: rgba(11, 36, 71, 0.09);
+  --line: #dfe7ef;
+  --fg: #0b1a33; --fg-2: #41536b; --fg-muted: #5f7189;
+}
+:root.dark,
+:root[data-theme="fast"].dark {
+  --gradient-hero: linear-gradient(135deg, rgba(10,150,208,0.22) 0%, rgba(11,63,143,0.16) 55%, rgba(245,166,35,0.10) 100%);
+  --chart-1: #38b6e8; --chart-2: #34d3a6; --chart-3: #fbbf4a; --chart-4: #fb7185;
+  --chart-5: #6d9cf5; --chart-6: #9b8cf5; --chart-7: #fb923c; --chart-8: #2dd4cf;
+  --bg-base: #061226;
+  --bg-wash:
+    radial-gradient(60rem 36rem at 90% -10%, rgba(10, 150, 208, 0.18), transparent 60%),
+    radial-gradient(48rem 32rem at -6% 0%, rgba(11, 63, 143, 0.28), transparent 58%);
+  --glow-1: rgba(10, 150, 208, 0.16);
+  --glow-2: rgba(11, 63, 143, 0.20);
+  --surface: rgba(12, 28, 56, 0.82);
+  --surface-solid: #0d1f3d;
+  --sidebar-bg: rgba(7, 18, 38, 0.94);
+  --fg: #eef4fb; --fg-2: #c3d0e0; --fg-muted: #8fa3bb;
+}
+
+/* ───────────────────────── CLASSIC ─────────────────────────
    Tailwind default slate neutrals, indigo → violet → fuchsia, multi-colour tones. */
 :root,
 :root[data-theme="classic"] {
@@ -480,13 +523,20 @@ input:focus, select:focus, textarea:focus {
   outline: none !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-500) 22%, transparent) !important;
 }
+@layer components {
 .field-input {
   width: 100%; height: 40px; padding: 0 12px; border-radius: 0.75rem; font-size: var(--fs-body, 0.9375rem);
   background: var(--surface-solid); color: var(--fg); border: 1px solid var(--line);
 }
+select.field-input, select.field-input:not([multiple]) {
+  appearance: none; -webkit-appearance: none; padding-right: 34px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center; background-size: 16px;
+}
 .field-input:hover { border-color: color-mix(in srgb, var(--fg-muted) 50%, var(--line)); }
 .field-input:focus { border-color: var(--brand-500); }
 .field-input::placeholder { color: var(--fg-muted); opacity: 0.8; }
+}
 
 /* ── Status badges (legacy classes) ── */
 .badge-pill { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; line-height: 1; }
@@ -558,6 +608,7 @@ input:focus, select:focus, textarea:focus {
   -webkit-backdrop-filter: blur(18px) saturate(1.15);
 }
 .shell-scrim { background: color-mix(in srgb, var(--fg) 34%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.nav-fade { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 22px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 22px), transparent 100%); }
 .scroll-hover { scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .scroll-hover:hover, .scroll-hover:focus-within { scrollbar-color: var(--scroll-thumb) transparent; }
 
@@ -585,12 +636,14 @@ input:focus, select:focus, textarea:focus {
 }
 .snav-item.is-active .snav-well { background-image: var(--gradient-primary); color: #fff; }
 .snav-item.is-active .snav-dot { display: block; }
+@layer components {
 .snav-icon-btn {
   display: inline-flex; align-items: center; justify-content: center; height: 40px; min-width: 40px; border-radius: 9999px; cursor: pointer;
   color: var(--fg-2); transition: background-color .18s ease, color .18s ease, transform .18s ease;
 }
 .snav-icon-btn:hover { background: var(--surface-2); color: var(--fg); }
 .snav-icon-btn:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+}
 .snav-logout:hover { background: color-mix(in srgb, var(--tone-rose) 12%, transparent); color: color-mix(in srgb, var(--tone-rose) 60%, black); }
 .dark .snav-logout:hover { color: color-mix(in srgb, var(--tone-rose) 55%, white); }
 

@@ -1,8 +1,9 @@
-import { LogOut, PanelLeftClose, PanelLeftOpen, Sparkles, X } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { LogOut, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../modules/auth';
 import useModalA11y from '../shared/hooks/useModalA11y.js';
 import { useI18n } from '../shared/i18n/languageContext.js';
+import { BrandMark } from '../shared/ui/BrandLogo.jsx';
 import OrgAvatar from '../shared/ui/OrgAvatar.jsx';
 import { NAV_TONE } from '../shared/ui/tones.js';
 import { useRailTip } from '../shared/ui/RailTip.jsx';
@@ -29,6 +30,12 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, toggleC
   const { me, staff, acting, organisation, logout } = useAuth();
   const { t } = useI18n();
   const sections = useVisibleNav();
+  const { pathname } = useLocation();
+  // Highlight only the most specific menu entry for this URL (so /organisations/onboard does not also light up /organisations).
+  const activeTo = sections
+    .flatMap((sec) => sec.items)
+    .filter((i) => (i.end ? pathname === i.to : pathname === i.to || pathname.startsWith(`${i.to}/`)))
+    .sort((a, b) => b.to.length - a.to.length)[0]?.to;
   const { bind, node: tipNode } = useRailTip(collapsed);
   const drawerRef = useModalA11y(mobileOpen, closeMobile); // phone drawer: Escape, focus trap + restore, scroll lock
 
@@ -56,12 +63,16 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, toggleC
           {orgName ? (
             <OrgAvatar name={orgName} logoUrl={organisation?.logoUrl} brandColor={organisation?.brandColor} size="md" />
           ) : (
-            <span className="brand-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white shadow-sm ring-1 ring-inset ring-white/20">
-              <Sparkles size={18} strokeWidth={2} />
-            </span>
+            <BrandMark size="md" />
           )}
           <div className={`min-w-0 flex-1 ${hide}`}>
-            <p className="text-card-title truncate !text-sm leading-tight" title={orgName || undefined}>{orgName || t('shell.brand', 'Counsellor Platform')}</p>
+            {orgName ? (
+              <p className="text-card-title line-clamp-2 break-words !text-sm leading-tight" title={orgName}>{orgName}</p>
+            ) : (
+              <p className="truncate text-[15px] leading-none tracking-tight text-fg" style={{ fontWeight: 800 }}>
+                FAST<span className="text-brand-500">ADMISSION</span>
+              </p>
+            )}
             <span className="tone-brand tone-chip mt-1 inline-flex max-w-full items-center truncate rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none">
               {roleLabel}
             </span>
@@ -73,7 +84,7 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, toggleC
         <div className="mx-4 h-px bg-line" />
 
         {/* Menu */}
-        <nav aria-label={t('shell.mainNav', 'Main navigation')} className="scrollbar-none scroll-hover flex-1 overflow-y-auto px-3 pb-3 pt-4">
+        <nav aria-label={t('shell.mainNav', 'Main navigation')} className="scrollbar-none scroll-hover nav-fade flex-1 overflow-y-auto px-3 pb-3 pt-4">
           {sections.map((section) => {
             const style = SECTION_STYLE[section.section] || { tone: 'indigo', key: '' };
             const title = t(style.key, section.section);
@@ -97,7 +108,7 @@ export default function Sidebar({ collapsed = false, mobileOpen = false, toggleC
                         onClick={closeMobile}
                         aria-label={label}
                         {...bind(label, title)}
-                        className={({ isActive }) => `snav-item group tone-${style.tone} ${isActive ? 'is-active' : ''}`}
+                        className={() => `snav-item group tone-${style.tone} ${item.to === activeTo ? 'is-active' : ''}`}
                       >
                         <span className="snav-well">
                           <Icon size={18} />

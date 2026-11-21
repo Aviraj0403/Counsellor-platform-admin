@@ -146,22 +146,22 @@ export default function Partners() {
           <p className="text-caption mt-0.5">Schools & Coaching Hubs</p>
         </Card>
         <Card className="p-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-600">Active Partners</div>
-          <div className="mt-1 text-2xl font-bold text-emerald-700">
+          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">Active Partners</div>
+          <div className="mt-1 text-2xl font-bold text-emerald-700 dark:text-emerald-300">
             {data?.items?.filter((i) => i.status === 'partnered').length ?? 0}
           </div>
           <p className="text-caption mt-0.5">Sharing Student Batches</p>
         </Card>
         <Card className="p-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-blue-600">Meetings Scheduled</div>
-          <div className="mt-1 text-2xl font-bold text-blue-700">
+          <div className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-300">Meetings Scheduled</div>
+          <div className="mt-1 text-2xl font-bold text-blue-700 dark:text-blue-300">
             {data?.items?.filter((i) => i.status === 'meeting_scheduled').length ?? 0}
           </div>
           <p className="text-caption mt-0.5">Seminars & Workshops</p>
         </Card>
         <Card className="p-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-amber-600">Under Outreach</div>
-          <div className="mt-1 text-2xl font-bold text-amber-700">
+          <div className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-300">Under Outreach</div>
+          <div className="mt-1 text-2xl font-bold text-amber-700 dark:text-amber-300">
             {data?.items?.filter((i) => i.status === 'contacted').length ?? 0}
           </div>
           <p className="text-caption mt-0.5">Initial Follow-ups</p>

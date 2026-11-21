@@ -1,28 +1,28 @@
-import { Building2, CheckCircle2, Coins, Layers, PauseCircle, PiggyBank, Plus, TrendingUp, Wallet } from 'lucide-react';
+import { Building2, CheckCircle2, Coins, History, Layers, LineChart, PauseCircle, PiggyBank, Plus, Receipt, Tags, TrendingUp, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useI18n } from '../../../shared/i18n/languageContext.js';
 import OrgAvatar from '../../../shared/ui/OrgAvatar.jsx';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { formatDate, formatINR, thisMonth } from '../../../shared/lib/format';
-import { Badge, Button, Card, Empty, PageHeader, Spinner, Table } from '../../../shared/ui/ui';
+import { Badge, Button, Card, Empty, Spinner, Table } from '../../../shared/ui/ui';
 import { useAuth } from '../../auth';
 import { useCatalog } from '../../catalog';
 import * as api from '../api';
+import QuickLinks from '../components/QuickLinks';
 import Stat from '../components/Stat';
+import WelcomeHero from '../components/WelcomeHero';
 
 const ACTIONS = [
-  { to: '/organisations', label: 'Organisations and their features', perm: 'platform:tenants:manage' },
-  { to: '/plans', label: 'Plans and pricing', perm: 'platform:billing:manage' },
-  { to: '/invoices', label: 'Invoices', perm: 'platform:billing:manage' },
-  { to: '/costs', label: 'Platform costs', perm: 'platform:costs:manage' },
-  { to: '/insights', label: 'Usage and conversion research', perm: 'platform:insights:read' },
-  { to: '/platform-audit', label: 'Platform audit', perm: 'platform:audit:read' },
+  { to: '/organisations', label: 'Organisations and features', icon: Building2, tone: 'violet', perm: 'platform:tenants:manage' },
+  { to: '/plans', label: 'Plans and pricing', icon: Tags, tone: 'emerald', perm: 'platform:billing:manage' },
+  { to: '/invoices', label: 'Invoices', icon: Receipt, tone: 'emerald', perm: 'platform:billing:manage' },
+  { to: '/costs', label: 'Platform costs', icon: Wallet, tone: 'amber', perm: 'platform:costs:manage' },
+  { to: '/insights', label: 'Usage and conversion research', icon: LineChart, tone: 'sky', perm: 'platform:insights:read' },
+  { to: '/platform-audit', label: 'Platform audit', icon: History, tone: 'orange', perm: 'platform:audit:read' },
 ];
 
 /** Home for platform staff: organisations, money and what customers use. Only organisation and finance numbers, never student data. */
 export default function PlatformDashboard() {
-  const { t } = useI18n();
   const { me, can } = useAuth();
   const catalog = useCatalog();
   const [money, setMoney] = useState(null);
@@ -52,13 +52,14 @@ export default function PlatformDashboard() {
 
   return (
     <>
-      <PageHeader
-        title={t('page.welcome', 'Welcome, {name}', { name: me.user.name })}
+      <WelcomeHero
+        name={me.user.name}
+        chip={me.user.roleLabel}
         subtitle="Platform overview: organisations, revenue and costs for this month."
-        action={wantOrgs && <Link to="/organisations"><Button><Plus size={16} /> New organisation</Button></Link>}
+        actions={wantOrgs && <Link to="/organisations/onboard"><Button variant="secondary" className="!text-[#0b3f8f]"><Plus size={16} /> New organisation</Button></Link>}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {(wantOrgs || wantMoney) && <Stat icon={Building2} tone="violet" label="Organisations" value={total ?? '...'} hint={o ? `${o.newLast30Days} new in the last 30 days` : undefined} to="/organisations" />}
         {o && <Stat icon={CheckCircle2} tone="emerald" label="Active" value={o.active} hint={`${o.activeStaffAccounts} staff accounts`} />}
         {o && <Stat icon={PauseCircle} tone={o.suspended ? 'rose' : 'amber'} label="Suspended" value={o.suspended} hint={o.suspended ? 'Locked out until reactivated' : 'None suspended'} />}
@@ -130,13 +131,7 @@ export default function PlatformDashboard() {
         <div className="space-y-5">
           <Card title="Quick actions">
             {actions.length ? (
-              <ul className="space-y-2 text-sm">
-                {actions.map((a) => (
-                  <li key={a.to}>
-                    <Link to={a.to} className="font-medium text-brand-600 hover:underline dark:text-brand-300">{a.label} →</Link>
-                  </li>
-                ))}
-              </ul>
+              <QuickLinks items={actions} />
             ) : (
               <p className="text-sm text-fg-muted">Your role has no platform screens yet. Ask your administrator.</p>
             )}

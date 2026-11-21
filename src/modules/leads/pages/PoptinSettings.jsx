@@ -92,7 +92,7 @@ export default function PoptinSettings() {
       {/* Analytics Metric Cards */}
       <div className="grid gap-4 sm:grid-cols-3 mb-6">
         <Card className="flex items-center gap-4">
-          <div className="p-3 bg-blue-500/10 text-blue-600 rounded-xl">
+          <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-300 rounded-xl">
             <Eye className="w-5 h-5" />
           </div>
           <div>
@@ -101,7 +101,7 @@ export default function PoptinSettings() {
           </div>
         </Card>
         <Card className="flex items-center gap-4">
-          <div className="p-3 bg-emerald-500/10 text-emerald-600 rounded-xl">
+          <div className="p-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 rounded-xl">
             <UserCheck className="w-5 h-5" />
           </div>
           <div>
@@ -110,7 +110,7 @@ export default function PoptinSettings() {
           </div>
         </Card>
         <Card className="flex items-center gap-4">
-          <div className="p-3 bg-purple-500/10 text-purple-600 rounded-xl">
+          <div className="p-3 bg-purple-500/10 text-purple-600 dark:text-purple-300 rounded-xl">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
@@ -272,7 +272,7 @@ export default function PoptinSettings() {
                   Admissions 2026 Guidance
                 </div>
                 <h4 className="text-lg font-extrabold mb-1.5 leading-snug">{config.headline}</h4>
-                <p className="text-xs text-slate-500 mb-4 leading-relaxed">{config.subheadline}</p>
+                <p className="text-xs text-fg-muted mb-4 leading-relaxed">{config.subheadline}</p>
 
                 <div className="space-y-2.5">
                   <input
@@ -305,7 +305,7 @@ export default function PoptinSettings() {
                     {config.design?.buttonText || 'Get Free Counselling Call'}
                   </button>
                 </div>
-                <p className="text-[10px] text-center text-slate-400 mt-3">
+                <p className="text-[10px] text-center text-fg-muted mt-3">
                   🔒 Safe & Verified • Expert counsellor will call within 15 minutes
                 </p>
               </div>

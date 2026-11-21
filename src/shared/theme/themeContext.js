@@ -8,13 +8,14 @@ import { createContext, useContext, useLayoutEffect } from 'react';
  * public/theme-init.js applies the first two before first paint so there is no flash.
  */
 export const THEMES = [
+  { id: 'fast', labelKey: 'theme.fast', label: 'FastAdmission', dots: ['#0a96d0', '#0b3f8f', '#f5a623'] },
   { id: 'classic', labelKey: 'theme.classic', label: 'Classic', dots: ['#4f46e5', '#7c3aed', '#10b981'] },
   { id: 'beauty', labelKey: 'theme.beauty', label: 'Beauty', dots: ['#b94f55', '#c9993b', '#8b6fd1'] },
   { id: 'ocean', labelKey: 'theme.ocean', label: 'Ocean', dots: ['#0284c7', '#06b6d4', '#14b8a6'] },
   { id: 'emerald', labelKey: 'theme.emerald', label: 'Emerald', dots: ['#059669', '#14b8a6', '#84cc16'] },
   { id: 'slate', labelKey: 'theme.slate', label: 'Slate', dots: ['#2563eb', '#52525b', '#a1a1aa'] },
 ];
-export const DEFAULT_COLOR_THEME = 'classic';
+export const DEFAULT_COLOR_THEME = 'fast';
 export const DENSITIES = ['compact', 'comfortable'];
 
 export const ThemeContext = createContext({

@@ -66,6 +66,7 @@ const en = {
   'theme.system': 'System',
   'theme.compact': 'Compact',
   'theme.comfortable': 'Comfortable',
+  'theme.fast': 'FastAdmission',
   'theme.classic': 'Classic',
   'theme.beauty': 'Beauty',
   'theme.ocean': 'Ocean',

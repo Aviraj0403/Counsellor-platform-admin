@@ -1,19 +1,19 @@
-import { CalendarCheck, ClipboardList, GraduationCap, ListChecks } from 'lucide-react';
+import { CalendarCheck, ChevronDown, ClipboardList, GraduationCap, ListChecks, ShieldCheck, Upload, UserPlus, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useI18n } from '../../../shared/i18n/languageContext.js';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { humanize } from '../../../shared/lib/format';
-import { Badge, Card, Empty, PageHeader, Spinner } from '../../../shared/ui/ui';
+import { Badge, Card, Empty, Spinner } from '../../../shared/ui/ui';
 import { useAuth } from '../../auth';
 import { useCatalog } from '../../catalog';
 import * as api from '../api';
+import QuickLinks from '../components/QuickLinks';
 import Stat from '../components/Stat';
+import WelcomeHero from '../components/WelcomeHero';
 
 const STATUS_TONE = { admitted: 'green', fee_paid: 'green', rejected: 'red', declined: 'red', draft: 'gray', withdrawn: 'gray' };
 
 /** Home for organisation users: only cards for features that are on and permissions the person has. */
 export default function TenantDashboard() {
-  const { t } = useI18n();
   const { me, can, hasModule } = useAuth();
   const catalog = useCatalog();
   const [d, setD] = useState({});
@@ -45,13 +45,21 @@ export default function TenantDashboard() {
   });
   const statusRows = Object.entries(byStatus).sort((a, b) => b[1] - a[1]);
   const anyCard = Object.values(show).some(Boolean);
+  const quick = [
+    can('leads:write') && hasModule('leads') && { to: '/leads', label: 'Add or import leads', icon: UserPlus, tone: 'orange' },
+    can('followups:read') && hasModule('followups') && { to: '/followups', label: 'My follow-up tasks', icon: ListChecks, tone: 'amber' },
+    can('appointments:write') && hasModule('appointments') && { to: '/appointments', label: 'Book an appointment', icon: CalendarCheck, tone: 'indigo' },
+    can('applications:read') && hasModule('applications') && { to: '/applications', label: 'Track applications', icon: GraduationCap, tone: 'violet' },
+    can('documents:read') && hasModule('documents') && { to: '/documents/queue', label: 'Verify documents', icon: Upload, tone: 'sky' },
+    can('ledger:read') && hasModule('ledger') && { to: '/ledger', label: 'Ledger and payments', icon: Wallet, tone: 'emerald' },
+  ].filter(Boolean);
 
   return (
     <>
-      <PageHeader title={t('page.welcome', 'Welcome, {name}', { name: me.user.name })} subtitle={role ? `${role.label}: ${role.description}` : undefined} />
+      <WelcomeHero name={me.user.name} chip={role?.label} subtitle={role?.description} />
 
       {anyCard && (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           {show.tasks && (
             <Stat icon={ListChecks} tone={d.tasks?.overdue ? 'rose' : 'amber'} label="My follow-ups due today" value={d.tasks ? d.tasks.dueToday : '...'} hint={d.tasks ? `${d.tasks.overdue} overdue · ${d.tasks.open} open` : undefined} to="/followups" />
           )}
@@ -63,9 +71,9 @@ export default function TenantDashboard() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+      <div className="mt-6 grid gap-5 lg:grid-cols-3">
         {show.apps && (
-          <Card title="Applications by status">
+          <Card title="Applications by status" className="lg:col-span-2">
             {!d.apps ? (
               <Spinner />
             ) : statusRows.length === 0 ? (
@@ -86,13 +94,26 @@ export default function TenantDashboard() {
           </Card>
         )}
 
-        <Card title="Your access">
-          <p className="mb-2 text-xs text-fg-muted">Permissions given by your role ({me.permissions.length})</p>
-          <div className="flex flex-wrap gap-1.5">
-            {me.permissions.length ? me.permissions.map((p) => <Badge key={p} tone="blue">{p}</Badge>) : <span className="text-sm text-fg-muted">None</span>}
-          </div>
-        </Card>
+        {quick.length > 0 && (
+          <Card title="Quick actions">
+            <QuickLinks items={quick} />
+          </Card>
+        )}
       </div>
+
+      <details className="group mt-5">
+        <summary className="surface-card flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+          <span className="tone-brand tone-chip flex h-8 w-8 items-center justify-center rounded-lg"><ShieldCheck size={16} /></span>
+          <span className="flex-1">
+            <span className="text-card-title block">Your access</span>
+            <span className="text-caption">{me.permissions.length} permissions given by your role</span>
+          </span>
+          <ChevronDown size={16} className="text-fg-muted transition-transform group-open:rotate-180" />
+        </summary>
+        <div className="mt-2 flex flex-wrap gap-1.5 px-1">
+          {me.permissions.length ? me.permissions.map((p) => <Badge key={p} tone="blue">{p}</Badge>) : <span className="text-sm text-fg-muted">None</span>}
+        </div>
+      </details>
 
       <Card title="Features for your organisation" className="mt-5">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">

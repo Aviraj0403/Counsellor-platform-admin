@@ -136,11 +136,11 @@ export default function MyApplications() {
         )}
 
         {data.referral && (
-          <Card className="flex items-center justify-between border-l-4 border-l-purple-600 bg-purple-50/30 p-4">
+          <Card className="flex items-center justify-between border-l-4 border-l-purple-600 bg-purple-50/30 dark:bg-purple-500/10 p-4">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-purple-700">Refer a Friend & Earn ₹2,000</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-purple-700 dark:text-purple-300">Refer a Friend & Earn ₹2,000</span>
               <div className="mt-1 flex items-center gap-2">
-                <span className="rounded bg-purple-100 px-2 py-0.5 font-mono text-xs font-bold text-purple-800">
+                <span className="rounded bg-purple-100 dark:bg-purple-500/10 px-2 py-0.5 font-mono text-xs font-bold text-purple-800 dark:text-purple-300">
                   {data.referral.referralCode}
                 </span>
                 <span className="text-xs text-fg-muted">Share your link</span>

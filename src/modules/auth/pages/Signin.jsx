@@ -1,18 +1,19 @@
-import { BarChart3, CalendarCheck, ShieldCheck, Sparkles, Building2, Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
+import { ArrowRight, BarChart3, Eye, EyeOff, Lock, Mail, ShieldCheck, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useI18n } from '../../../shared/i18n/languageContext.js';
 import LanguageSwitcher from '../../../shared/i18n/LanguageSwitcher.jsx';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import Ambient from '../../../shared/ui/Ambient.jsx';
+import BrandLogo from '../../../shared/ui/BrandLogo.jsx';
 import ThemePicker from '../../../shared/ui/ThemePicker.jsx';
 import { Button, Field, Input } from '../../../shared/ui/ui';
 import useAuth from '../hooks/useAuth';
 
-// Drop your own photo at public/login-hero.jpg, or point VITE_LOGIN_IMAGE at any image URL. If it is missing the gradient panel shows instead.
-const HERO = import.meta.env.VITE_LOGIN_IMAGE || '/login-hero.jpg';
+// Hero artwork: VITE_LOGIN_IMAGE overrides it; if it fails to load the navy gradient below still reads well.
+const HERO = import.meta.env.VITE_LOGIN_IMAGE || '/login-hero.webp';
 const POINTS = [
-  { icon: CalendarCheck, key: 'auth.point1', text: 'Leads, follow-ups and counselling appointments in one place' },
+  { icon: Users, key: 'auth.point1', text: 'Leads, follow-ups and counselling appointments in one place' },
   { icon: BarChart3, key: 'auth.point2', text: 'Track every student from first enquiry to admission' },
   { icon: ShieldCheck, key: 'auth.point3', text: 'Secure, role-based access for your whole team' },
 ];
@@ -21,31 +22,26 @@ function HeroPanel() {
   const { t } = useI18n();
   const [imgOk, setImgOk] = useState(true);
   return (
-    <aside className="brand-gradient relative hidden w-[50%] max-w-[720px] shrink-0 overflow-hidden lg:flex" aria-label={t('auth.heroLabel', 'About the platform')}>
-      {imgOk && <img src={HERO} alt="" className="absolute inset-0 h-full w-full object-cover" onError={() => setImgOk(false)} />}
-      {/* pattern + legibility overlay: the text below is always white on a dark wash, in light and dark mode */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/25" />
-      <div
-        className="absolute inset-0 opacity-25"
-        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)', backgroundSize: '24px 24px' }}
-        aria-hidden="true"
-      />
+    <aside className="relative hidden w-[52%] max-w-[760px] shrink-0 overflow-hidden bg-[#061a3f] lg:flex" aria-label={t('auth.heroLabel', 'About the platform')}>
+      {imgOk && <img src={HERO} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" onError={() => setImgOk(false)} />}
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(70% 55% at 85% 0%, rgba(10,150,208,0.45), transparent 70%), radial-gradient(60% 50% at 0% 100%, rgba(245,166,35,0.16), transparent 70%), linear-gradient(180deg, rgba(6,26,63,0.35), rgba(6,26,63,0.92))' }} />
       <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-14">
-        <div className="flex items-center gap-3 text-white">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-inset ring-white/30 backdrop-blur shadow-sm">
-            <Sparkles size={20} />
+        <BrandLogo tone="light" size="lg" sub={t('auth.tagline', 'Counsellor Platform')} />
+
+        <div className="max-w-xl text-white">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-sky-100 ring-1 ring-inset ring-white/20 backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> {t('auth.badge', 'Admissions operating system')}
           </span>
-          <span className="text-lg font-bold tracking-tight">{t('shell.brand', 'Counsellor Platform')}</span>
-        </div>
-        <div className="max-w-lg text-white">
-          <h2 className="text-4xl font-extrabold leading-tight xl:text-5xl">{t('auth.headline', 'Turn every enquiry into an admission.')}</h2>
-          <ul className="mt-8 space-y-4">
+          <h2 className="mt-5 text-4xl leading-[1.1] xl:text-[46px]" style={{ fontWeight: 800, letterSpacing: '-0.025em' }}>
+            {t('auth.headline', 'Turn every enquiry into an admission.')}
+          </h2>
+          <ul className="mt-9 space-y-3.5">
             {POINTS.map(({ icon, key, text }) => {
               const Icon = icon;
               return (
-                <li key={key} className="flex items-start gap-3 text-base text-white/90">
-                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/15 ring-1 ring-inset ring-white/25">
-                    <Icon size={16} />
+                <li key={key} className="flex items-center gap-3.5 text-[15px] text-white/90">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-sky-200 ring-1 ring-inset ring-white/20 backdrop-blur">
+                    <Icon size={18} />
                   </span>
                   <span>{t(key, text)}</span>
                 </li>
@@ -53,7 +49,13 @@ function HeroPanel() {
             })}
           </ul>
         </div>
-        <p className="text-xs text-white/60">Enterprise Multi-Tenant Admission OS &copy; {new Date().getFullYear()}</p>
+
+        <div className="flex items-center justify-between gap-4 text-xs text-white/55">
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldCheck size={14} /> {t('auth.secure', 'Encrypted, audited and tenant-isolated')}
+          </span>
+          <span>&copy; {new Date().getFullYear()} FastAdmission</span>
+        </div>
       </div>
     </aside>
   );
@@ -96,39 +98,40 @@ export default function Signin() {
   };
 
   return (
-    <div className="relative min-h-dvh w-full overflow-hidden text-fg lg:flex">
+    <div className="relative min-h-dvh w-full text-fg lg:flex">
       <HeroPanel />
 
-      <main className="bg-mesh relative isolate flex min-h-dvh flex-1 flex-col justify-between p-4 sm:p-8 lg:p-12">
+      <main className="bg-mesh relative isolate flex min-h-dvh flex-1 flex-col">
         <Ambient />
 
-        {/* Top bar with quick switchers */}
-        <div className="relative z-10 flex w-full items-center justify-between pb-6 sm:pb-0">
-          <div className="flex items-center gap-2.5 lg:hidden">
-            <span className="brand-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm ring-1 ring-inset ring-white/20">
-              <Sparkles size={16} />
-            </span>
-            <span className="font-bold text-sm tracking-tight text-fg">Counsellor Platform</span>
+        {/* Phones and tablets: compact brand band instead of the hero panel */}
+        <div className="relative z-10 overflow-hidden bg-[#061a3f] px-5 pb-16 pt-5 lg:hidden">
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(80% 90% at 100% 0%, rgba(10,150,208,0.55), transparent 70%), radial-gradient(60% 70% at 0% 100%, rgba(245,166,35,0.18), transparent 70%)' }} />
+          <div className="relative flex items-center justify-between gap-3">
+            <BrandLogo tone="light" size="md" />
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+              <ThemePicker />
+            </div>
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <LanguageSwitcher />
-            <ThemePicker />
-          </div>
+          <p className="relative mt-6 max-w-[18rem] text-[22px] leading-tight text-white" style={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+            {t('auth.headline', 'Turn every enquiry into an admission.')}
+          </p>
         </div>
 
-        {/* Login Container (Ultra-responsive on iOS/Android) */}
-        <div className="relative z-10 mx-auto my-auto w-full max-w-[420px] py-4">
-          <div className="surface-card card-pad border border-line shadow-xl">
-            {/* Header in Card */}
-            <div className="mb-6 space-y-2 text-center sm:text-left">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 ring-1 ring-inset ring-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300">
-                <Building2 size={24} />
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-fg">
-                {t('auth.title', 'Welcome Back')}
+        <div className="relative z-10 hidden items-center justify-end gap-2 p-6 lg:flex xl:p-8">
+          <LanguageSwitcher />
+          <ThemePicker />
+        </div>
+
+        <div className="relative z-10 mx-auto flex w-full max-w-[440px] flex-1 flex-col px-4 pb-6 max-lg:-mt-10 sm:px-0 lg:justify-center">
+          <div style={{ background: "var(--surface-solid)" }} className="surface-card border border-line p-6 shadow-[0_24px_60px_-24px_rgba(6,26,63,0.35)] sm:p-8">
+            <div className="mb-7">
+              <h1 className="text-[26px] leading-tight text-fg" style={{ fontWeight: 700, letterSpacing: '-0.02em' }}>
+                {mfaToken ? t('auth.mfaTitle', 'Two-step verification') : t('auth.welcome', 'Welcome back')}
               </h1>
-              <p className="text-xs sm:text-sm text-fg-muted">
-                {t('auth.subtitle', 'Sign in to access your admissions workspace')}
+              <p className="mt-1.5 text-sm text-fg-muted">
+                {mfaToken ? t('auth.mfaSub', 'Confirm it is you to finish signing in.') : t('auth.subtitle', 'Sign in to your admin account')}
               </p>
             </div>
 
@@ -167,13 +170,13 @@ export default function Signin() {
                 </>
               ) : (
                 <>
-                  <Field label="Email, Mobile (+91) or Tenant ID">
+                  <Field label={t('auth.identifier', 'Email, mobile (+91) or tenant ID')}>
                     <div className="relative">
                       <Input
                         type="text"
                         autoComplete="username"
                         required
-                        placeholder="name@agency.com or +9198XXXXXXXX"
+                        placeholder="name@agency.com"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         className="pl-9 text-base sm:text-sm"
@@ -207,26 +210,19 @@ export default function Signin() {
                 </>
               )}
 
-              <Button
-                type="submit"
-                loading={busy}
-                className="w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold shadow-md active:scale-[0.98] transition-transform"
-              >
-                {!busy && <LogIn size={16} />}
-                {mfaToken ? 'Verify Token' : t('auth.signin', 'Sign In to Workspace')}
+              <Button type="submit" loading={busy} className="h-11 w-full gap-2 text-sm font-semibold shadow-md transition-transform active:scale-[0.985]">
+                {mfaToken ? t('auth.verify', 'Verify and continue') : t('auth.signin', 'Sign in')}
+                {!busy && <ArrowRight size={16} />}
               </Button>
             </form>
           </div>
 
-          <div className="mt-4 text-center text-xs text-fg-muted">
-            Protected by multi-tenant database isolation &amp; DPDP compliance.
-          </div>
+          <p className="mt-5 flex items-start justify-center gap-1.5 px-2 text-center text-xs text-fg-muted">
+            <ShieldCheck size={14} className="mt-px shrink-0" /> {t('auth.protected', 'Protected by tenant isolation, audit logging and DPDP-aligned controls.')}
+          </p>
         </div>
 
-        {/* Footer info for mobile safe view */}
-        <div className="relative z-10 text-center text-xs text-fg-muted pt-2 safe-pb">
-          Fast, secure counselling &amp; admissions operations.
-        </div>
+        <p className="safe-pb relative z-10 pb-3 text-center text-xs text-fg-muted lg:hidden">&copy; {new Date().getFullYear()} FastAdmission</p>
       </main>
     </div>
   );

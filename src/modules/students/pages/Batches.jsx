@@ -111,7 +111,7 @@ export default function Batches() {
         subtitle="Organize students into academic counselling cohorts, schedule group workshops, and track physical/online attendance."
       />
 
-      {err && <div className="rounded-md bg-rose-50 p-3 text-sm text-rose-800">{err}</div>}
+      {err && <div className="rounded-md bg-rose-50 dark:bg-rose-500/10 p-3 text-sm text-rose-800 dark:text-rose-300">{err}</div>}
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left Column: Batches List */}
@@ -313,7 +313,7 @@ export default function Batches() {
                                         className={`rounded px-2 py-0.5 text-xs font-medium ${
                                           record?.status === 'present'
                                             ? 'bg-emerald-600 text-white'
-                                            : 'bg-surface border border-line text-fg hover:bg-emerald-50'
+                                            : 'bg-surface border border-line text-fg hover:bg-emerald-50 dark:hover:bg-emerald-500/10'
                                         }`}
                                       >
                                         Present
@@ -324,7 +324,7 @@ export default function Batches() {
                                         className={`rounded px-2 py-0.5 text-xs font-medium ${
                                           record?.status === 'absent'
                                             ? 'bg-rose-600 text-white'
-                                            : 'bg-surface border border-line text-fg hover:bg-rose-50'
+                                            : 'bg-surface border border-line text-fg hover:bg-rose-50 dark:hover:bg-rose-500/10'
                                         }`}
                                       >
                                         Absent

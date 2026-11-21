@@ -165,7 +165,7 @@ export default function OnboardOrganisation() {
     return (
       <div className="mx-auto max-w-2xl py-8">
         <Card className="border-t-4 border-t-emerald-600 p-6 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
             <CheckCircle2 size={32} />
           </div>
           <h2 className="mt-4 text-xl font-bold text-fg">Organisation Onboarded!</h2>
@@ -231,7 +231,7 @@ export default function OnboardOrganisation() {
                 isCurrent
                   ? 'border-brand-500 bg-brand-50/40 text-brand-700 shadow-sm'
                   : isDone
-                  ? 'cursor-pointer border-emerald-300 bg-emerald-50/30 text-emerald-700'
+                  ? 'cursor-pointer border-emerald-300 dark:border-emerald-500/30 bg-emerald-50/30 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
                   : 'border-line bg-surface text-fg-muted opacity-60'
               }`}
             >
