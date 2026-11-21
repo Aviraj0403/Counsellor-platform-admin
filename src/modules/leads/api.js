@@ -8,3 +8,9 @@ export const getLead = (id) => Axios.get(`/leads/${id}`);
 export const importLeads = (body) => Axios.post('/leads/import', body);
 export const getPoptinConfig = () => Axios.get('/leads/poptin/config');
 export const savePoptinConfig = (body) => Axios.put('/leads/poptin/config', body);
+
+// Partners & Outreach Directory
+export const listPartners = (params) => Axios.get('/leads/partners', { params });
+export const addPartner = (body) => Axios.post('/leads/partners', body);
+export const updatePartnerStatus = (id, status, notes) => Axios.patch(`/leads/partners/${id}/status`, { status, notes });
+

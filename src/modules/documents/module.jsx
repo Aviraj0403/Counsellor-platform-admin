@@ -5,5 +5,5 @@ import DocumentQueue from './pages/DocumentQueue';
 export default {
   key: 'documents',
   routes: [{ path: '/documents/queue', element: <Guard scope="tenant" perm="documents:verify" module="documents"><DocumentQueue /></Guard> }],
-  nav: [{ section: 'Admissions', order: 17, to: '/documents/queue', label: 'Document verification', icon: ShieldCheck, scope: 'tenant', perm: 'documents:verify', module: 'documents' }],
+  nav: [{ section: 'Admissions & Counselling', order: 18, to: '/documents/queue', label: 'Document verification', icon: ShieldCheck, scope: 'tenant', perm: 'documents:verify', module: 'documents' }],
 };

@@ -10,7 +10,7 @@ export default {
     { path: '/seo/pages', element: <Guard scope="tenant" perm="seo:manage" module="seoPages"><SeoPages /></Guard> },
   ],
   nav: [
-    { section: 'Marketing and channels', order: 30, to: '/seo', label: 'Public website', icon: Globe, scope: 'tenant', perm: 'seo:manage', module: 'seoPages' },
-    { section: 'Marketing and channels', order: 31, to: '/seo/pages', label: 'College pages (SEO)', icon: Globe, scope: 'tenant', perm: 'seo:manage', module: 'seoPages' },
+    { section: 'Growth & Channels', order: 30, to: '/seo', label: 'Public website', icon: Globe, scope: 'tenant', perm: 'seo:manage', module: 'seoPages' },
+    { section: 'Growth & Channels', order: 31, to: '/seo/pages', label: 'College pages (SEO)', icon: Globe, scope: 'tenant', perm: 'seo:manage', module: 'seoPages' },
   ],
 };

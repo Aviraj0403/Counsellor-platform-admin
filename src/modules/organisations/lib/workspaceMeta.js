@@ -23,7 +23,13 @@ const ICONS = {
 };
 export const iconFor = (key) => ICONS[key] || Puzzle;
 
-export const GROUPS = { crm: 'CRM', admissions: 'Admissions', finance: 'Finance', marketing: 'Marketing', channels: 'Channels', platform: 'Platform' };
+export const GROUPS = {
+  crm: '1. Lead Engine & Outreach',
+  admissions: '2. Admissions & Counselling',
+  channels: '3. Growth & Channels',
+  finance: '4. Finance & Settlements',
+  platform: '5. Organisation & Integrations',
+};
 
 /** Modules that connect this organisation to something outside the product. */
 export const INTEGRATION_KEYS = ['whatsapp', 'metaAds', 'publicApi', 'seoPages', 'aiBot', 'appointments'];

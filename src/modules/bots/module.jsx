@@ -16,9 +16,9 @@ export default {
     { path: '/bots/test', element: g('bots:manage', <TestConsole />) },
   ],
   nav: [
-    { section: 'Counselling', order: 30, to: '/bots', label: 'Assistant chats', labelKey: 'nav.botConversations', icon: MessageSquare, scope: 'tenant', perm: 'bots:read', module: 'aiBot' },
-    { section: 'Counselling', order: 31, to: '/bots/summary', label: 'Assistant results', labelKey: 'nav.botSummary', icon: BarChart3, scope: 'tenant', perm: 'bots:read', module: 'aiBot' },
-    { section: 'Counselling', order: 32, to: '/bots/settings', label: 'Assistant settings', labelKey: 'nav.botSettings', icon: Settings2, scope: 'tenant', perm: 'bots:read', module: 'aiBot' },
-    { section: 'Counselling', order: 33, to: '/bots/test', label: 'Test the assistant', labelKey: 'nav.botTest', icon: TestTube2, scope: 'tenant', perm: 'bots:manage', module: 'aiBot' },
+    { section: 'Growth & Channels', order: 32, to: '/bots', label: 'Assistant chats', labelKey: 'nav.botConversations', icon: MessageSquare, scope: 'tenant', perm: 'bots:read', module: 'aiBot' },
+    { section: 'Growth & Channels', order: 33, to: '/bots/summary', label: 'Assistant results', labelKey: 'nav.botSummary', icon: BarChart3, scope: 'tenant', perm: 'bots:read', module: 'aiBot' },
+    { section: 'Growth & Channels', order: 34, to: '/bots/settings', label: 'Assistant settings', labelKey: 'nav.botSettings', icon: Settings2, scope: 'tenant', perm: 'bots:read', module: 'aiBot' },
+    { section: 'Growth & Channels', order: 35, to: '/bots/test', label: 'Test the assistant', labelKey: 'nav.botTest', icon: TestTube2, scope: 'tenant', perm: 'bots:manage', module: 'aiBot' },
   ],
 };

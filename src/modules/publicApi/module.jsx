@@ -10,7 +10,7 @@ export default {
     { path: '/integrations/webhooks', element: <Guard scope="tenant" perm="integrations:manage" module="publicApi"><Webhooks /></Guard> },
   ],
   nav: [
-    { section: 'Developers', order: 61, to: '/integrations/api-keys', label: 'API keys', icon: KeyRound, scope: 'tenant', perm: 'integrations:manage', module: 'publicApi' },
-    { section: 'Developers', order: 62, to: '/integrations/webhooks', label: 'Webhooks', icon: Webhook, scope: 'tenant', perm: 'integrations:manage', module: 'publicApi' },
+    { section: 'Developers & Integrations', order: 61, to: '/integrations/api-keys', label: 'API keys', icon: KeyRound, scope: 'tenant', perm: 'integrations:manage', module: 'publicApi' },
+    { section: 'Developers & Integrations', order: 62, to: '/integrations/webhooks', label: 'Webhooks', icon: Webhook, scope: 'tenant', perm: 'integrations:manage', module: 'publicApi' },
   ],
 };

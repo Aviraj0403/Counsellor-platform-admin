@@ -18,14 +18,13 @@ export const SECTION_ORDER = [
   'Revenue and billing',
   'Research and insights',
   'Platform settings',
-  // organisation users
-  'Leads and sales',
-  'Admissions',
-  'Counselling',
-  'Finance',
-  'Marketing and channels',
-  'Developers',
+  // organisation users (clean symmetrical 5-pillar structure)
+  'Lead Engine & Outreach',
+  'Admissions & Counselling',
+  'Growth & Channels',
+  'Finance & Settlements',
   'My organisation',
+  'Developers & Integrations',
   'Account',
 ];
 

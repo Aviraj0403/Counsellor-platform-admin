@@ -14,7 +14,7 @@ export default {
     { path: '/students/:id', element: <Guard scope="tenant" perm="students:read" module="students"><StudentDetail /></Guard> },
   ],
   nav: [
-    { section: 'Admissions', order: 12, to: '/students', label: 'Students', icon: GraduationCap, scope: 'tenant', perm: 'students:read', module: 'students' },
-    { section: 'Admissions', order: 13, to: '/students/batches', label: 'Batches & Sessions', icon: Users, scope: 'tenant', perm: 'students:read', module: 'students' },
+    { section: 'Admissions & Counselling', order: 12, to: '/students', label: 'Students', icon: GraduationCap, scope: 'tenant', perm: 'students:read', module: 'students' },
+    { section: 'Admissions & Counselling', order: 13, to: '/students/batches', label: 'Batches & Sessions', icon: Users, scope: 'tenant', perm: 'students:read', module: 'students' },
   ],
 };

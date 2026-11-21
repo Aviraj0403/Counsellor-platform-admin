@@ -16,9 +16,9 @@ export default {
     { path: '/appointments/waitlist', element: g('appointments:read', <Waitlist />) },
   ],
   nav: [
-    { section: 'Counselling', order: 20, to: '/appointments', label: 'Appointments', labelKey: 'nav.appointments', icon: CalendarCheck, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
-    { section: 'Counselling', order: 21, to: '/appointments/types', label: 'Appointment types', labelKey: 'nav.appointmentTypes', icon: Settings2, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
-    { section: 'Counselling', order: 22, to: '/appointments/availability', label: 'Availability', labelKey: 'nav.availability', icon: CalendarClock, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
-    { section: 'Counselling', order: 23, to: '/appointments/waitlist', label: 'Waiting list', labelKey: 'nav.waitlist', icon: Hourglass, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
+    { section: 'Admissions & Counselling', order: 19, to: '/appointments', label: 'Appointments', labelKey: 'nav.appointments', icon: CalendarCheck, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
+    { section: 'Admissions & Counselling', order: 20, to: '/appointments/types', label: 'Appointment types', labelKey: 'nav.appointmentTypes', icon: Settings2, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
+    { section: 'Admissions & Counselling', order: 21, to: '/appointments/availability', label: 'Availability', labelKey: 'nav.availability', icon: CalendarClock, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
+    { section: 'Admissions & Counselling', order: 22, to: '/appointments/waitlist', label: 'Waiting list', labelKey: 'nav.waitlist', icon: Hourglass, scope: 'tenant', perm: 'appointments:read', module: 'appointments' },
   ],
 };

@@ -5,5 +5,5 @@ import MyTasks from './pages/MyTasks';
 export default {
   key: 'followups',
   routes: [{ path: '/followups', element: <Guard scope="tenant" perm="followups:read" module="followups"><MyTasks /></Guard> }],
-  nav: [{ section: 'Leads and sales', order: 11, to: '/followups', label: 'My tasks', icon: ListChecks, scope: 'tenant', perm: 'followups:read', module: 'followups' }],
+  nav: [{ section: 'Lead Engine & Outreach', order: 14, to: '/followups', label: 'My tasks', icon: ListChecks, scope: 'tenant', perm: 'followups:read', module: 'followups' }],
 };
