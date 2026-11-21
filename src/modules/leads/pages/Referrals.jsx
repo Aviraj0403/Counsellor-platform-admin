@@ -139,19 +139,17 @@ export default function Referrals() {
               description="When students share their referral link with prospective friends and family, referrals will appear here."
             />
           ) : (
-            <Table>
-              <thead>
-                <tr>
-                  <th>Referrer (Student)</th>
-                  <th>Referred Contact</th>
-                  <th>Code</th>
-                  <th>Status</th>
-                  <th>Reward</th>
-                  <th className="text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {referrals.map((r) => (
+            <Table
+              head={[
+                'Referrer (Student)',
+                'Referred Contact',
+                'Code',
+                'Status',
+                'Reward',
+                'Action',
+              ]}
+            >
+              {referrals.map((r) => (
                   <tr key={r._id}>
                     <td>
                       <div className="font-medium text-fg">{r.referrerName}</div>
@@ -180,7 +178,6 @@ export default function Referrals() {
                     </td>
                   </tr>
                 ))}
-              </tbody>
             </Table>
           )}
         </Card>

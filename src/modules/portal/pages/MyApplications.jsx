@@ -154,11 +154,11 @@ export default function MyApplications() {
       </div>
 
       {/* Pending Fees & Seat Booking Payments */}
-      {data.feeLinks?.length > 0 && (
+      {(data.feeLinks || []).length > 0 && (
         <Card className="mb-6 p-4">
           <h3 className="mb-2 text-sm font-semibold text-fg">Pending Fees & Seat Booking Deposits</h3>
           <div className="divide-y divide-line">
-            {data.feeLinks.map((f) => (
+            {(data.feeLinks || []).map((f) => (
               <div key={f._id} className="flex items-center justify-between py-2 text-sm">
                 <div>
                   <div className="font-medium text-fg">{f.title}</div>
@@ -188,11 +188,11 @@ export default function MyApplications() {
         <h3 className="text-base font-semibold text-fg">Your Applications</h3>
       </div>
 
-      {data.applications.length === 0 ? (
+      {(data.applications || []).length === 0 ? (
         <Empty>No applications yet. Your counsellor will add them.</Empty>
       ) : (
         <div className="space-y-5">
-          {data.applications.map((a) => <ApplicationCard key={a.id} app={a} onChange={load} />)}
+          {(data.applications || []).map((a) => <ApplicationCard key={a.id} app={a} onChange={load} />)}
         </div>
       )}
     </>

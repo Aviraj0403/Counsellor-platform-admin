@@ -209,20 +209,18 @@ export default function CampaignsTab({ manage }) {
           description="Create and launch targeted WhatsApp campaigns to engage your prospective students at scale."
         />
       ) : (
-        <Table>
-          <thead>
-            <tr>
-              <th>Campaign</th>
-              <th>Audience</th>
-              <th>Template</th>
-              <th>Status</th>
-              <th>Stats</th>
-              <th>Created</th>
-              <th className="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaigns.map((c) => (
+        <Table
+          head={[
+            'Campaign',
+            'Audience',
+            'Template',
+            'Status',
+            'Stats',
+            'Created',
+            'Actions',
+          ]}
+        >
+          {campaigns.map((c) => (
               <tr key={c._id}>
                 <td className="font-medium text-fg">{c.name}</td>
                 <td className="capitalize text-fg-muted">{c.audience}</td>
@@ -256,7 +254,6 @@ export default function CampaignsTab({ manage }) {
                 </td>
               </tr>
             ))}
-          </tbody>
         </Table>
       )}
     </div>

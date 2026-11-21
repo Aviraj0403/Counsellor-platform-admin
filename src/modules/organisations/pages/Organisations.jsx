@@ -57,7 +57,7 @@ export default function Organisations() {
   const filtered = (all || []).filter((o) => (!status || o.status === status) && (!q || o.name.toLowerCase().includes(q) || o.slug.includes(q)));
   const pageRows = filtered.slice((page - 1) * LIMIT, page * LIMIT);
   const counts = (all || []).reduce((n, o) => ({ ...n, [o.status]: (n[o.status] || 0) + 1 }), {});
-  const chips = (o) => (catalog ? catalog.modules.filter((m) => !m.core && o.modules[m.key]) : []);
+  const chips = (o) => (catalog ? (catalog.modules || []).filter((m) => !m.core && o?.modules?.[m.key]) : []);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value, ...(k === 'name' && !f.slugTouched ? { slug: slugify(e.target.value) } : {}) }));
 

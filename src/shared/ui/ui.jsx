@@ -85,13 +85,15 @@ export function Table({ head, children }) {
   return (
     <div className="overflow-x-auto">
       <table className="modern-table">
-        <thead>
-          <tr>
-            {head.map((h) => (
-              <th key={h}>{h}</th>
-            ))}
-          </tr>
-        </thead>
+        {Array.isArray(head) && head.length > 0 && (
+          <thead>
+            <tr>
+              {head.map((h, i) => (
+                <th key={typeof h === 'string' ? h : i}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+        )}
         <tbody>{children}</tbody>
       </table>
     </div>
