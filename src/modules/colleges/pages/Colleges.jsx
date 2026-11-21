@@ -97,8 +97,8 @@ export default function Colleges() {
       )}
 
       <Card>
-        <div className="mb-4 grid gap-3 md:grid-cols-4">
-          <Input placeholder="Search name" value={filters.search} onChange={set('search')} aria-label="Search name" />
+        <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Input className="col-span-2 md:col-span-1" placeholder="Search name" value={filters.search} onChange={set('search')} aria-label="Search name" />
           <Input placeholder="City" value={filters.city} onChange={set('city')} aria-label="City" />
           <Select value={filters.type} onChange={set('type')} aria-label="Type">
             <option value="">All types</option>

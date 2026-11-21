@@ -1,4 +1,4 @@
-import { CalendarCheck, ChevronDown, ClipboardList, GraduationCap, ListChecks, ShieldCheck, Upload, UserPlus, Wallet } from 'lucide-react';
+import { CalendarCheck, ChevronDown, ClipboardList, GraduationCap, ListChecks, Megaphone, ShieldCheck, Upload, UserPlus, Users, Wallet, Building2, Globe } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { humanize } from '../../../shared/lib/format';
@@ -7,6 +7,7 @@ import { useAuth } from '../../auth';
 import { useCatalog } from '../../catalog';
 import * as api from '../api';
 import QuickLinks from '../components/QuickLinks';
+import SetupChecklist from '../components/SetupChecklist';
 import Stat from '../components/Stat';
 import WelcomeHero from '../components/WelcomeHero';
 
@@ -23,6 +24,11 @@ export default function TenantDashboard() {
     leads: can('leads:read') && hasModule('leads'),
     appts: can('appointments:read') && hasModule('appointments'),
     apps: can('applications:read') && hasModule('applications'),
+    // setup checks (owner-level screens)
+    meta: can('integrations:manage') && hasModule('metaAds'),
+    team: can('team:manage'),
+    colleges: can('colleges:write') && hasModule('colleges'),
+    anyLeads: can('leads:read') && hasModule('leads'),
   };
 
   useEffect(() => {
@@ -32,10 +38,15 @@ export default function TenantDashboard() {
     if (show.leads) api.newLeads().then(put('leads')).catch(toastError);
     if (show.appts) api.appointmentSummary().then(put('appts')).catch(toastError);
     if (show.apps) api.latestApplications().then(put('apps')).catch(toastError);
+    // setup state is best-effort: a failed check just leaves that step un-ticked
+    if (show.meta) api.metaConfig().then(put('metaCfg')).catch(() => {});
+    if (show.team) api.teamList().then(put('teamList')).catch(() => {});
+    if (show.colleges) api.anyColleges().then(put('collegeList')).catch(() => {});
+    if (show.anyLeads) api.anyLeads().then(put('leadList')).catch(() => {});
     return () => {
       live = false;
     };
-  }, [show.tasks, show.leads, show.appts, show.apps]);
+  }, [show.tasks, show.leads, show.appts, show.apps, show.meta, show.team, show.colleges, show.anyLeads]);
 
   if (!catalog) return <Spinner />;
   const role = catalog.roles.find((r) => r.key === me.user.role);
@@ -45,6 +56,14 @@ export default function TenantDashboard() {
   });
   const statusRows = Object.entries(byStatus).sort((a, b) => b[1] - a[1]);
   const anyCard = Object.values(show).some(Boolean);
+  const loaded = (k) => d[k] !== undefined;
+  const setup = [
+    show.anyLeads && { key: 'site', title: 'Connect lead sources', hint: 'Website form, Justdial, Google Ads or any portal via one webhook.', to: '/leads/sources', cta: 'Open lead sources', icon: Globe, tone: 'sky', done: loaded('leadList') && d.leadList.total > 0 },
+    show.meta && { key: 'meta', title: 'Connect Meta Ads', hint: 'Pixel, access token and lead-ads webhook, step by step.', to: '/integrations/meta', cta: 'Start Meta setup', icon: Megaphone, tone: 'indigo', done: loaded('metaCfg') && !!d.metaCfg.tokenSet && !!d.metaCfg.enabled },
+    show.team && { key: 'team', title: 'Invite your team', hint: 'Counsellors, sales, accounts and admissions, each with their own access.', to: '/team', cta: 'Add team', icon: Users, tone: 'violet', done: loaded('teamList') && (d.teamList.team?.length || 0) > 1 },
+    show.colleges && { key: 'colleges', title: 'Add your colleges', hint: 'Directory with fees and courses, used by applications and the predictor.', to: '/colleges', cta: 'Add colleges', icon: Building2, tone: 'emerald', done: loaded('collegeList') && d.collegeList.total > 0 },
+  ].filter(Boolean).map((x) => ({ ...x, done: !!x.done }));
+  const setupReady = setup.length > 0 && (!show.anyLeads || loaded('leadList')) && (!show.meta || loaded('metaCfg')) && (!show.team || loaded('teamList')) && (!show.colleges || loaded('collegeList'));
   const quick = [
     can('leads:write') && hasModule('leads') && { to: '/leads', label: 'Add or import leads', icon: UserPlus, tone: 'orange' },
     can('followups:read') && hasModule('followups') && { to: '/followups', label: 'My follow-up tasks', icon: ListChecks, tone: 'amber' },
@@ -57,6 +76,8 @@ export default function TenantDashboard() {
   return (
     <>
       <WelcomeHero name={me.user.name} chip={role?.label} subtitle={role?.description} />
+
+      {setupReady && <SetupChecklist steps={setup} />}
 
       {anyCard && (
         <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">

@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { Badge, Button, Card, Empty, Field, Input, PageHeader, Spinner, Table } from '../../../shared/ui/ui';
 import { toastError } from '../../../shared/lib/AxiosToastError';
 import { formatDate } from '../../../shared/lib/format';
+import MetaSetupGuide from '../components/MetaSetupGuide';
 import * as api from '../api';
 import MetaInsights from './MetaInsights';
 
@@ -76,6 +77,7 @@ export default function MetaSettings() {
         subtitle="Bring Meta lead-ad enquiries in automatically, and tell Meta which leads became qualified or admitted (hashed, no raw phone or email is sent)."
         action={<Badge tone={cfg.enabled ? 'green' : 'gray'}>{cfg.enabled ? 'On' : 'Off'}</Badge>}
       />
+      <MetaSetupGuide cfg={cfg} events={events} />
       <MetaInsights />
       <div className="grid gap-4 lg:grid-cols-2">
         <Card title="Pixel and conversions">

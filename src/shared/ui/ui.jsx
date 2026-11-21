@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react';
+import { Inbox, Loader2 } from 'lucide-react';
 import { useId } from 'react';
 import { cx } from '../lib/cx.js';
 import BaseBadge from './Badge';
@@ -41,8 +41,16 @@ export function Spinner({ label = 'Loading...' }) {
   );
 }
 
-export function Empty({ children }) {
-  return <p className="rounded-xl border border-dashed border-line p-6 text-center text-sm text-fg-muted">{children}</p>;
+export function Empty({ children, icon }) {
+  const Icon = icon || Inbox;
+  return (
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-line bg-surface-2/50 px-6 py-8 text-center">
+      <span className="tone-brand tone-chip flex h-11 w-11 items-center justify-center rounded-2xl">
+        <Icon size={20} />
+      </span>
+      <p className="max-w-[46ch] text-sm text-fg-muted">{children}</p>
+    </div>
+  );
 }
 
 export function Field({ label, hint, children }) {

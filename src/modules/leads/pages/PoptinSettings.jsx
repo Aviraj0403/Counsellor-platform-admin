@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Sparkles, Globe, Eye, UserCheck, Code2, ExternalLink, Sliders } from 'lucide-react';
 import { Badge, Button, Card, Field, Input, PageHeader, Spinner } from '../../../shared/ui/ui';
+import { API_ORIGIN } from '../../../shared/api/apiConfig';
 import { useAuth } from '../../auth';
 import * as api from '../api';
 import { toastError } from '../../../shared/lib/AxiosToastError';
@@ -14,9 +15,7 @@ export default function PoptinSettings() {
   const [domainsText, setDomainsText] = useState('');
 
   const slug = organisation?.slug || 'my-counsellor';
-  const apiBase = window.location.origin.includes('5173')
-    ? 'http://localhost:4100'
-    : window.location.origin;
+  const apiBase = API_ORIGIN;
 
   const embedCode = `<script src="${apiBase}/public/poptin/poptin-sdk.js" data-tenant-slug="${slug}" data-api-base="${apiBase}" async></script>`;
 

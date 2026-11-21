@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../modules/auth';
 import { useI18n } from '../shared/i18n/languageContext.js';
@@ -8,7 +8,10 @@ import { Spinner } from '../shared/ui/ui';
 import ActingBanner from './ActingBanner';
 import Breadcrumbs from './Breadcrumbs';
 import Header from './Header';
+import { SECTION_STYLE } from './sectionStyle';
 import Sidebar from './Sidebar';
+import useActiveNav from './useActiveNav';
+import { PageMetaContext } from '../shared/ui/pageMeta.js';
 
 const COLLAPSE_KEY = 'cp_sidebar_collapsed';
 const readCollapsed = () => {
@@ -28,6 +31,8 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(readCollapsed);
   useDensityAttribute();
+  const active = useActiveNav();
+  const pageMeta = useMemo(() => (active && active.item.to !== '/' ? { icon: active.item.icon, tone: SECTION_STYLE[active.section]?.tone || 'indigo' } : null), [active]);
 
   const closeMobile = () => setMobileOpen(false);
   const toggleMobile = () => setMobileOpen((p) => !p);
@@ -83,7 +88,9 @@ export default function Layout() {
                 <Breadcrumbs />
               </div>
               <div className="min-w-0 flex-1">
-                <Outlet key={acting?.tenantId || 'console'} />
+                <PageMetaContext.Provider value={pageMeta}>
+                  <Outlet key={acting?.tenantId || 'console'} />
+                </PageMetaContext.Provider>
               </div>
             </div>
           </main>

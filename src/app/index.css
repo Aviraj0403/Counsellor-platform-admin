@@ -719,3 +719,7 @@ select.field-input, select.field-input:not([multiple]) {
 @supports (padding: max(0px)) {
   .safe-pb { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
 }
+
+/* Native checkboxes / radios / ranges follow the brand colour */
+input[type="checkbox"], input[type="radio"], input[type="range"] { accent-color: var(--brand-500); }
+input[type="checkbox"], input[type="radio"] { width: 16px; height: 16px; cursor: pointer; }

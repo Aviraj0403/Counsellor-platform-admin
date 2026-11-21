@@ -1,11 +1,17 @@
 import React from "react";
+import { useContext } from "react";
 import { cx } from "../lib/cx.js";
+import { PageMetaContext } from "./pageMeta.js";
+import { TONE_STYLES } from "./tones.js";
 
 /**
  * Page title block. 21px semibold title, secondary description, 24px bottom margin.
  * `sticky` pins it under the top bar while the page scrolls.
  */
-export default function PageHeader({ title, description, actions, icon: Icon, className = "", sticky = false }) {
+export default function PageHeader({ title, description, actions, icon, className = "", sticky = false }) {
+  const meta = useContext(PageMetaContext);
+  const Icon = icon || meta?.icon;
+  const chip = icon || !meta?.tone ? "tone-brand tone-chip" : TONE_STYLES[meta.tone]?.chip || "tone-brand tone-chip";
   return (
     <div
       className={cx(
@@ -16,8 +22,8 @@ export default function PageHeader({ title, description, actions, icon: Icon, cl
     >
       <div className="flex min-w-0 items-center gap-3">
         {Icon && (
-          <span className="tone-brand tone-chip flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
-            <Icon size={18} />
+          <span className={cx(chip, "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl")}>
+            <Icon size={20} />
           </span>
         )}
         <div className="min-w-0">
@@ -25,7 +31,7 @@ export default function PageHeader({ title, description, actions, icon: Icon, cl
           {description && <p className="t-secondary mt-1 max-w-[68ch] text-sm">{description}</p>}
         </div>
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      {actions && <div className="flex flex-wrap items-center gap-2 [&>div.flex]:flex-wrap">{actions}</div>}
     </div>
   );
 }

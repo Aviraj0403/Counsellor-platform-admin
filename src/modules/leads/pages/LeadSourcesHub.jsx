@@ -17,6 +17,7 @@ import {
   PhoneCall,
 } from 'lucide-react';
 import { Badge, Button, Card, Field, Input, PageHeader } from '../../../shared/ui/ui';
+import { API_ORIGIN } from '../../../shared/api/apiConfig';
 import { useAuth } from '../../auth';
 
 export default function LeadSourcesHub() {
@@ -24,7 +25,7 @@ export default function LeadSourcesHub() {
   const [copiedKey, setCopiedKey] = useState(null);
 
   const slug = organisation?.slug || acting?.tenantName?.toLowerCase().replace(/\s+/g, '-') || 'demo-counsellor';
-  const apiBase = window.location.origin;
+  const apiBase = API_ORIGIN;
 
   const copyToClipboard = (text, key) => {
     navigator.clipboard.writeText(text);

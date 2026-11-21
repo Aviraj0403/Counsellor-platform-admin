@@ -4,6 +4,8 @@ import { useAuth } from '../modules/auth';
 import { useI18n } from '../shared/i18n/languageContext.js';
 import LanguageSwitcher from '../shared/i18n/LanguageSwitcher.jsx';
 import ThemePicker from '../shared/ui/ThemePicker.jsx';
+import { BrandMark } from '../shared/ui/BrandLogo.jsx';
+import OrgAvatar from '../shared/ui/OrgAvatar.jsx';
 import OrganisationSwitcher from './OrganisationSwitcher';
 import QuickNav from './QuickNav';
 
@@ -12,7 +14,7 @@ const iconBtn =
 
 /** Sticky top bar: menu / collapse, page search, then (right) organisation switch, language, appearance, profile. */
 export default function Header({ toggleMobile, mobileOpen, collapsed, toggleCollapsed }) {
-  const { me, staff, acting, canSwitchOrganisation, logout } = useAuth();
+  const { me, staff, acting, organisation, canSwitchOrganisation, logout } = useAuth();
   const { t, lang, setLang, languages } = useI18n();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -26,6 +28,7 @@ export default function Header({ toggleMobile, mobileOpen, collapsed, toggleColl
   }, []);
 
   const name = staff?.name || '';
+  const orgName = organisation?.name || acting?.tenantName || '';
   const collapseLabel = collapsed ? t('shell.expand', 'Expand sidebar') : t('nav.collapse', 'Collapse sidebar');
 
   return (
@@ -38,6 +41,11 @@ export default function Header({ toggleMobile, mobileOpen, collapsed, toggleColl
           <button type="button" onClick={toggleCollapsed} className={`${iconBtn} hidden lg:flex`} aria-label={collapseLabel} title={collapseLabel}>
             {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
           </button>
+          {/* phones: who am I working for (the sidebar that normally says so is a drawer) */}
+          <div className="flex min-w-0 items-center gap-2 lg:hidden">
+            {orgName ? <OrgAvatar name={orgName} logoUrl={organisation?.logoUrl} brandColor={organisation?.brandColor} size="sm" /> : <BrandMark size="sm" />}
+            <span className="truncate text-[13px] font-semibold text-fg">{orgName || <>FAST<span className="text-brand-500">ADMISSION</span></>}</span>
+          </div>
           <QuickNav />
         </div>
 
